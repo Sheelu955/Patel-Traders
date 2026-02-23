@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Patel Traders | ERP Master V3</title>
+    <title>Patel Traders | Admin & Customer ERP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -18,15 +18,16 @@
         #receipt-render { width: 210mm; min-height: 297mm; background: white; color: #0f172a; padding: 18mm; border: 8px solid var(--bhagwa); position: relative; box-sizing: border-box; margin: 0 auto; }
         .stamp { position: absolute; top: 12%; right: 10%; width: 150px; height: 150px; border: 6px solid; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 28px; transform: rotate(-20deg); opacity: 0.15; pointer-events: none; }
         .active-tab { background: var(--bhagwa) !important; color: white !important; }
+        .admin-db-card { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 12px; margin-bottom: 8px; border-left: 4px solid var(--bhagwa); }
     </style>
 </head>
 <body>
 
 <div id="view-home" class="app-view" style="display: flex;">
     <div class="text-center p-10 glass w-full max-w-sm border-t-4 border-[#ff9933]">
-        <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-24 mx-auto mb-6 rounded-3xl border-2 border-[#ff9933]" crossorigin="anonymous">
+        <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-24 mx-auto mb-6 rounded-3xl border-2 border-[#ff9933]">
         <h1 class="text-4xl font-black italic mb-1 uppercase tracking-tighter">Patel <span class="text-[#ff9933]">Traders</span></h1>
-        <h2 class="text-[#ff9933] text-[15px] font-black tracking-[0.3em] mb-1">फर्नीचर शॉप</h2>
+        <h2 class="text-[#ff9933] text-[15px] font-black mb-1">फर्नीचर शॉप</h2>
         <p class="text-white/40 text-[10px] mb-8 font-bold italic">गांधीनगर, तालग्राम, कन्नौज (U.P.)</p>
         <button onclick="window.adminGatewayInit()" class="btn-bhagwa mb-4">Admin Gateway</button>
         <button onclick="window.showView('view-cust-gate')" class="w-full py-4 glass font-black uppercase text-xs tracking-widest text-[#ff9933]">Customer Vault</button>
@@ -43,21 +44,9 @@
     </div>
 </div>
 
-<div id="view-cust-gate" class="app-view">
-    <div class="glass p-8 w-full max-w-sm border-b-4 border-[#ff9933]">
-        <h2 class="text-2xl font-black text-white text-center mb-8 uppercase italic">Vault Access</h2>
-        <div id="authTabs" class="flex gap-2 mb-6 bg-black/40 p-1 rounded-xl">
-            <button id="tL" onclick="window.toggleAuth('login')" class="flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab">Login</button>
-            <button id="tR" onclick="window.toggleAuth('reg')" class="flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-slate-400">Register</button>
-        </div>
-        <div id="boxL"><input type="text" id="lU" placeholder="Username" class="m-input"><input type="password" id="lP" placeholder="Password" class="m-input"><button onclick="window.handleLogin()" class="btn-bhagwa mt-2">Unlock Vault</button></div>
-        <div id="boxR" style="display: none;"><input type="text" id="rN" placeholder="Full Name" class="m-input"><input type="text" id="rPh" placeholder="Mobile No" class="m-input"><input type="text" id="rU" placeholder="Set Username" class="m-input"><input type="password" id="rP" placeholder="Set Password" class="m-input"><button onclick="window.handleReg()" class="btn-bhagwa mt-2">Create Vault ID</button></div>
-        <button onclick="window.showView('view-home')" class="w-full text-slate-600 text-[10px] mt-8 uppercase border-t border-white/5 pt-4">← Exit</button>
-    </div>
-</div>
-
 <div id="view-admin-app" class="app-view" style="align-items: flex-start;">
     <div class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 py-6">
+        
         <div class="w-full lg:w-1/3 p-6 glass border-t-4 border-[#ff9933]">
             <h2 class="text-xl font-black mb-6 uppercase italic">Billing Hub</h2>
             <div class="flex gap-2 mb-6 bg-black/40 p-1 rounded-xl">
@@ -72,15 +61,28 @@
             <select id="inWarranty" onchange="window.sync()" class="m-input"><option>No Warranty</option><option>1 Year</option><option>5 Years</option></select>
             <textarea id="inDetail" oninput="window.sync()" placeholder="Extra Details..." class="m-input h-16"></textarea>
             <input type="text" id="inPostDate" oninput="window.sync()" placeholder="Due Date (DD/MM/YYYY)" class="m-input" style="display:none">
+            
             <button onclick="window.saveBillMaster()" class="btn-bhagwa mt-4">Save & Print Bill</button>
-            <button onclick="window.showView('view-home')" class="w-full py-2 text-slate-500 uppercase mt-4 text-[9px]">Logout Admin</button>
+
+            <div class="mt-8 border-t border-white/10 pt-6">
+                <h3 class="text-xs font-black uppercase text-[#ff9933] mb-4 tracking-widest">☁️ Cloud Database</h3>
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <button onclick="window.fetchAdminCloud('PAID')" class="py-3 bg-emerald-500/20 text-emerald-500 rounded-xl font-bold text-[10px] uppercase border border-emerald-500/30">Paid History</button>
+                    <button onclick="window.fetchAdminCloud('UNPAID')" class="py-3 bg-rose-500/20 text-rose-500 rounded-xl font-bold text-[10px] uppercase border border-rose-500/30">Unpaid Dues</button>
+                </div>
+                <div id="adminCloudList" class="max-h-[300px] overflow-y-auto pr-2 space-y-2 text-[11px]">
+                    <p class="text-white/20 text-center italic mt-4">Select mode to load records...</p>
+                </div>
+            </div>
+
+            <button onclick="window.showView('view-home')" class="w-full py-2 text-slate-500 uppercase mt-6 text-[9px] border-t border-white/5 pt-4">Logout Admin</button>
         </div>
 
         <div class="w-full lg:w-2/3 bg-slate-900/50 p-6 rounded-[40px]">
             <div id="receipt-render">
                 <div id="stP" class="stamp" style="color: #10b981; border-color: #10b981;">PAID</div><div id="stU" class="stamp" style="display:none; color: #ef4444; border-color: #ef4444;">PENDING</div>
                 <div class="flex justify-between border-b-2 pb-6 border-slate-100">
-                    <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-24 rounded-2xl" crossorigin="anonymous">
+                    <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-24 rounded-2xl">
                     <div class="text-right">
                         <h1 class="text-4xl font-black uppercase text-slate-900">Patel Traders</h1>
                         <p class="text-[11px] font-black text-slate-800 uppercase">गांधीनगर, तालग्राम, कन्नौज, उत्तर प्रदेश - 209731</p>
@@ -91,7 +93,7 @@
                     <div><p class="text-slate-400 text-[10px]">Customer</p><h3 id="vName" class="text-3xl font-black italic">Guest</h3><p id="vPhone" class="text-slate-500">+91 0000000000</p><p class="mt-2 text-[10px]">Vehicle: <span id="vVehicle">--</span></p></div>
                     <div class="text-right text-[12px]">INV: <span id="vInv">#AUTO</span><br>DATE: <span id="vDate">--</span><br>WAR: <span id="vWar">None</span></div>
                 </div>
-                <div class="min-h-[200px] border-y-2 py-8 font-black uppercase text-slate-800 border-slate-100">
+                <div class="min-h-[220px] border-y-2 py-8 font-black uppercase text-slate-800 border-slate-100">
                     <table class="w-full"><tr><td class="text-2xl italic"><span id="vItem">Item</span><br><small id="vDetail" class="text-xs normal-case text-slate-400 font-bold"></small></td><td id="vBase" class="text-right text-2xl">₹ 0</td></tr></table>
                 </div>
                 <div class="mt-10 p-8 bg-slate-50 rounded-[40px] flex justify-between items-center border border-slate-100">
@@ -103,35 +105,47 @@
     </div>
 </div>
 
+<div id="view-cust-gate" class="app-view">
+    <div class="glass p-8 w-full max-w-sm border-b-4 border-[#ff9933]">
+        <h2 class="text-2xl font-black text-white text-center mb-8 uppercase italic">Vault Access</h2>
+        <div id="authTabs" class="flex gap-2 mb-6 bg-black/40 p-1 rounded-xl">
+            <button id="tL" onclick="window.toggleAuth('login')" class="flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab">Login</button>
+            <button id="tR" onclick="window.toggleAuth('reg')" class="flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-slate-400">Register</button>
+        </div>
+        <div id="boxL"><input type="text" id="lU" placeholder="Username" class="m-input"><input type="password" id="lP" placeholder="Password" class="m-input"><button onclick="window.handleLogin()" class="btn-bhagwa mt-2">Unlock Vault</button></div>
+        <div id="boxR" style="display: none;"><input type="text" id="rN" placeholder="Full Name" class="m-input"><input type="text" id="rPh" placeholder="Mobile No" class="m-input"><input type="text" id="rU" placeholder="Set Username" class="m-input"><input type="password" id="rP" placeholder="Set Password" class="m-input"><button onclick="window.handleReg()" class="btn-bhagwa mt-2">Create Vault ID</button></div>
+        <button onclick="window.showView('view-home')" class="w-full text-slate-600 text-[10px] mt-8 uppercase border-t border-white/5 pt-4">← Exit</button>
+    </div>
+</div>
+
 <div id="view-cust-app" class="app-view" style="justify-content: flex-start;">
     <div class="w-full max-w-5xl mx-auto py-6">
         <div class="flex justify-between items-center glass p-10 border-l-8 border-[#ff9933] mb-8">
             <div><h2 class="text-4xl font-black uppercase">My <span class="text-[#ff9933]">Vault</span></h2><p id="cNameDisplay" class="text-xs text-[#ff9933] font-bold">Verified Owner</p></div>
             <button onclick="location.reload()" class="px-8 py-3 bg-rose-600 text-white font-black rounded-xl text-xs uppercase">Logout</button>
         </div>
-
         <div class="glass p-6 mb-6 border-l-4 border-emerald-500 bg-emerald-500/5">
-            <h3 class="text-emerald-400 font-black text-[11px] mb-4 uppercase tracking-widest text-center md:text-left">🔍 Find Missing Receipt</h3>
+            <h3 class="text-emerald-400 font-black text-[11px] mb-4 uppercase">🔍 Find Missing Receipt</h3>
             <div class="flex flex-col md:flex-row gap-3">
                 <input type="text" id="linkInvInput" placeholder="Invoice No (e.g. PT-B-123)" class="m-input m-0 flex-1">
                 <input type="text" id="linkDateInput" placeholder="Date (DD/MM/YYYY)" class="m-input m-0 flex-1">
-                <button onclick="window.linkAndOpenReceipt()" class="btn-bhagwa px-8 py-3 m-0 text-xs shadow-none">Search Bill</button>
+                <button onclick="window.linkAndOpenReceipt()" class="btn-bhagwa px-8 py-3 m-0 text-xs">Search Bill</button>
             </div>
         </div>
-
         <div id="uGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"></div>
         <div id="pGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"></div>
     </div>
 </div>
 
 <script>
+    // ⚙️ FINAL CONFIG
     const CONFIG = { 
         URL: "https://script.google.com/macros/s/AKfycbyqGgozh6soglW6b_8s7LSr96_gIGNaweAnG1CQn-_F5HytVi9pYGi3GDX-lSz-mEyD/exec", 
         ID: "1895656973148", 
         PIN: "7314" 
     };
 
-    window.pCode = ""; window.bMode = "PAID"; window.activeU = null; window.dbRecs = [];
+    window.pCode = ""; window.bMode = "PAID"; window.dbRecs = []; window.activeU = null;
 
     window.showView = (vId) => { document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none'); document.getElementById(vId).style.display = 'flex'; };
 
@@ -152,30 +166,6 @@
         document.getElementById('tR').className = t === 'reg' ? 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab' : 'flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-slate-400';
     };
 
-    window.handleLogin = async () => {
-        const u = document.getElementById('lU').value.trim(), p = document.getElementById('lP').value.trim();
-        const res = await fetch(`${CONFIG.URL}?action=getUsers`);
-        const users = await res.json();
-        const found = users.find(x => String(x.user) === u && String(x.pass) === p);
-        if (found) { window.activeU = found; document.getElementById('cNameDisplay').innerText = found.name; window.showView('view-cust-app'); window.loadVault(); } else alert("Error!");
-    };
-
-    window.handleReg = async () => {
-        const d = { type: "USER", name: document.getElementById('rN').value, phone: document.getElementById('rPh').value, user: document.getElementById('rU').value, pass: document.getElementById('rP').value };
-        await fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
-        alert("Registered!"); window.toggleAuth('login');
-    };
-
-    window.setBillMode = (m) => {
-        window.bMode = m;
-        document.getElementById('mP').className = m === 'PAID' ? 'w-1/2 py-3 rounded-lg font-black text-[10px] active-tab' : 'w-1/2 py-3 rounded-lg font-black text-[10px] text-white';
-        document.getElementById('mU').className = m === 'UNPAID' ? 'w-1/2 py-3 rounded-lg font-black text-[10px] active-tab' : 'w-1/2 py-3 rounded-lg font-black text-[10px] text-white';
-        document.getElementById('stP').style.display = m === 'PAID' ? 'flex' : 'none';
-        document.getElementById('stU').style.display = m === 'UNPAID' ? 'flex' : 'none';
-        document.getElementById('inPostDate').style.display = m === 'UNPAID' ? 'block' : 'none';
-        window.sync();
-    };
-
     window.sync = () => {
         const a = parseFloat(document.getElementById('inAmt').value) || 0, d = parseFloat(document.getElementById('inDisc').value) || 0;
         document.getElementById('vName').innerText = document.getElementById('inName').value || "Guest";
@@ -190,42 +180,54 @@
         document.getElementById('vDate').innerText = new Date().toLocaleDateString('en-GB');
     };
 
+    window.setBillMode = (m) => {
+        window.bMode = m;
+        document.getElementById('mP').className = m === 'PAID' ? 'w-1/2 py-3 rounded-lg font-black text-[10px] active-tab' : 'w-1/2 py-3 rounded-lg font-black text-[10px] text-white';
+        document.getElementById('mU').className = m === 'UNPAID' ? 'w-1/2 py-3 rounded-lg font-black text-[10px] active-tab' : 'w-1/2 py-3 rounded-lg font-black text-[10px] text-white';
+        document.getElementById('stP').style.display = m === 'PAID' ? 'flex' : 'none';
+        document.getElementById('stU').style.display = m === 'UNPAID' ? 'flex' : 'none';
+        document.getElementById('inPostDate').style.display = m === 'UNPAID' ? 'block' : 'none';
+        window.sync();
+    };
+
+    // ☁️ ADMIN CLOUD FETCH
+    window.fetchAdminCloud = async (mode) => {
+        const list = document.getElementById('adminCloudList');
+        list.innerHTML = `<p class="text-white/40 animate-pulse italic">Connecting Cloud...</p>`;
+        try {
+            const res = await fetch(`${CONFIG.URL}?action=getBills`);
+            window.dbRecs = await res.json();
+            const filtered = window.dbRecs.filter(r => r.mode === mode);
+            list.innerHTML = filtered.length ? filtered.reverse().map(r => `
+                <div class="admin-db-card flex justify-between items-center">
+                    <div>
+                        <b class="text-white">${r.name}</b><br>
+                        <span class="text-white/40 text-[9px]">${r.date} | ${r.inv}</span>
+                    </div>
+                    <button onclick="window.handleSilentPDF(${window.dbRecs.indexOf(r)}, 'view-admin-app')" class="px-3 py-1 bg-white/10 rounded-lg text-[#ff9933] font-bold">PDF</button>
+                </div>
+            `).join('') : `<p class="text-center text-white/20">No Records Found</p>`;
+        } catch(e) { list.innerHTML = `<p class="text-rose-500">Error Loading!</p>`; }
+    };
+
     window.saveBillMaster = async () => {
         const inv = "PT-B-" + Date.now().toString().slice(-6);
         const d = { type: "BILL", inv, name: document.getElementById('inName').value, phone: document.getElementById('inPhone').value, vehicle: document.getElementById('inVehicle').value, item: document.getElementById('inItem').value, total: document.getElementById('vTotal').innerText, date: document.getElementById('vDate').innerText, mode: window.bMode, warranty: document.getElementById('inWarranty').value, detail: document.getElementById('inDetail').value, postdate: document.getElementById('inPostDate').value };
         await fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
+        // Auto Print PDF
         const canvas = await html2canvas(document.getElementById('receipt-render'), {scale: 2, useCORS: true});
         const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
         pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
-        pdf.save(inv + ".pdf");
+        pdf.save(inv + "_" + d.name + ".pdf");
     };
 
-    window.loadVault = async () => {
-        const res = await fetch(`${CONFIG.URL}?action=getBills`);
-        window.dbRecs = await res.json();
-        const ph = String(window.activeU.phone).slice(-10);
-        const mine = window.dbRecs.filter(r => String(r.phone).includes(ph));
-        document.getElementById('pGrid').innerHTML = mine.filter(x=>x.mode==='PAID').map((r,i) => `<div class='glass p-6'><h3>${r.item}</h3><p>${r.total}</p><button onclick="window.handleSilentPDF(${window.dbRecs.indexOf(r)}, 'view-cust-app')" class='btn-bhagwa py-2 mt-4 text-xs shadow-none'>Download PDF</button></div>`).join('') || "No Bills";
-        document.getElementById('uGrid').innerHTML = mine.filter(x=>x.mode!=='PAID').map(r => `<div class='glass p-6 border-rose-500/20'><h3>${r.item}</h3><p class='text-rose-500 font-bold'>${r.total}</p></div>`).join('') || "No Dues";
-    };
-
-    window.linkAndOpenReceipt = async () => {
-        const inv = document.getElementById('linkInvInput').value.trim().toUpperCase();
-        const dt = document.getElementById('linkDateInput').value.trim();
-        const foundIdx = window.dbRecs.findIndex(r => String(r.inv).toUpperCase() === inv && String(r.date) === dt);
-        if(foundIdx !== -1) window.handleSilentPDF(foundIdx, 'view-cust-app'); else alert("Bill Not Found!");
-    };
-
-    window.handleSilentPDF = async function(idx, ret) {
+    window.handleSilentPDF = async (idx, retView) => {
         const r = window.dbRecs[idx];
         const v = document.getElementById('view-admin-app');
         v.style.display = 'flex'; v.style.opacity = '0.01'; v.style.position = 'fixed';
         
-        const nameEl = document.getElementById('vName');
-        const phoneEl = document.getElementById('vPhone');
-        
-        nameEl.innerText = r.name;
-        phoneEl.innerText = r.phone;
+        document.getElementById('vName').innerText = r.name;
+        document.getElementById('vPhone').innerText = r.phone;
         document.getElementById('vVehicle').innerText = r.vehicle || "--";
         document.getElementById('vInv').innerText = r.inv;
         document.getElementById('vTotal').innerText = r.total;
@@ -237,14 +239,38 @@
         document.getElementById('stU').style.display = r.mode !== 'PAID' ? 'flex' : 'none';
 
         setTimeout(async () => {
-            nameEl.innerText = r.name; // Double-Force ensure
             const canvas = await html2canvas(document.getElementById('receipt-render'), { scale: 2, useCORS: true });
             const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
             pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
             pdf.save(r.inv + "_" + r.name + ".pdf");
             v.style.display = 'none'; v.style.opacity = '1'; v.style.position = 'relative';
-            window.showView(ret);
+            window.showView(retView);
         }, 1200);
+    };
+
+    // --- CUSTOMER VAULT LOGIC (STAYS SAME) ---
+    window.handleLogin = async () => {
+        const u = document.getElementById('lU').value.trim(), p = document.getElementById('lP').value.trim();
+        const res = await fetch(`${CONFIG.URL}?action=getUsers`);
+        const users = await res.json();
+        const found = users.find(x => String(x.user) === u && String(x.pass) === p);
+        if (found) { window.activeU = found; document.getElementById('cNameDisplay').innerText = found.name; window.showView('view-cust-app'); window.loadVault(); } else alert("Error!");
+    };
+
+    window.loadVault = async () => {
+        const res = await fetch(`${CONFIG.URL}?action=getBills`);
+        window.dbRecs = await res.json();
+        const ph = String(window.activeU.phone).slice(-10);
+        const mine = window.dbRecs.filter(r => String(r.phone).includes(ph));
+        document.getElementById('pGrid').innerHTML = mine.filter(x=>x.mode==='PAID').map(r => `<div class='glass p-6'><h3>${r.item}</h3><p>${r.total}</p><button onclick="window.handleSilentPDF(${window.dbRecs.indexOf(r)}, 'view-cust-app')" class='btn-bhagwa py-2 mt-4 text-xs shadow-none'>Download PDF</button></div>`).join('') || "No Paid Bills";
+        document.getElementById('uGrid').innerHTML = mine.filter(x=>x.mode!=='PAID').map(r => `<div class='glass p-6 border-rose-500/20'><h3>${r.item}</h3><p class='text-rose-500 font-bold'>${r.total}</p></div>`).join('') || "No Dues";
+    };
+
+    window.linkAndOpenReceipt = async () => {
+        const inv = document.getElementById('linkInvInput').value.trim().toUpperCase();
+        const dt = document.getElementById('linkDateInput').value.trim();
+        const foundIdx = window.dbRecs.findIndex(r => String(r.inv).toUpperCase() === inv && String(r.date) === dt);
+        if(foundIdx !== -1) window.handleSilentPDF(foundIdx, 'view-cust-app'); else alert("Bill Not Found!");
     };
 </script>
 </body>
