@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Patel Traders | Furniture Shop ERP - Live</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap');
+        :root { --bhagwa: #ff9933; --bg-dark: #080a0f; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: #ffffff; margin: 0; padding: 0; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        .bg-glow { position: fixed; inset: 0; background: radial-gradient(circle at 10% 10%, rgba(255,153,51,0.15) 0%, transparent 40%), radial-gradient(circle at 90% 90%, rgba(204,68,0,0.1) 0%, transparent 40%); z-index: -1; pointer-events: none; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 153, 51, 0.2); border-radius: 24px; }
+        .m-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 16px; width: 100%; color: white; outline: none; margin-bottom: 12px; box-sizing: border-box; }
+        .m-input:focus { border-color: var(--bhagwa); box-shadow: 0 0 10px rgba(255, 153, 51, 0.2); }
+        .btn-bhagwa { background: linear-gradient(135deg, #ff9933, #cc5500); color: white; font-weight: 800; text-transform: uppercase; border-radius: 16px; padding: 18px; width: 100%; cursor: pointer; border: none; transition: 0.2s; box-shadow: 0 8px 15px rgba(255, 153, 51, 0.2); }
+        .btn-bhagwa:active { transform: scale(0.96); }
+        .app-view { display: none; min-height: 100vh; padding: 20px; flex-direction: column; align-items: center; justify-content: center; }
+        #receipt-render { width: 210mm; min-height: 297mm; background: white; color: #0f172a; padding: 18mm; border: 8px solid var(--bhagwa); position: relative; box-sizing: border-box; margin: 0 auto; }
+        .stamp { position: absolute; top: 12%; right: 10%; width: 150px; height: 150px; border: 6px solid; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 28px; transform: rotate(-20deg); opacity: 0.15; pointer-events: none; }
+        .stamp-paid { border-color: #10b981; color: #10b981; }
+        .stamp-unpaid { border-color: #ef4444; color: #ef4444; }
+        .active-tab { background: var(--bhagwa) !important; color: white !important; }
+    </style>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<div id="view-home" class="app-view" style="display: flex;">
+    <div class="text-center p-10 glass w-full max-w-sm border-t-4 border-[#ff9933]">
+        <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-24 mx-auto mb-6 rounded-[30px] border-2 border-[#ff9933]" alt="Logo" crossorigin="anonymous">
+        <h1 class="text-4xl font-black italic mb-1 uppercase tracking-tighter">Patel <span class="text-[#ff9933]">Traders</span></h1>
+        <h2 class="text-[#ff9933] text-[15px] font-black tracking-[0.3em] mb-1">फर्नीचर शॉप</h2>
+        <p class="text-white/60 text-[11px] mb-10 font-bold tracking-widest uppercase">प्रो.: संजय कुमार (+91 9565697314)</p>
+        
+        <button onclick="window.adminGatewayInit()" class="btn-bhagwa mb-4">Admin Gateway</button>
+        <button onclick="window.showView('view-cust-gate')" class="w-full py-4 glass font-black uppercase text-xs tracking-widest">Customer Vault</button>
+    </div>
+</div>
+
+<div id="view-admin-gate" class="app-view">
+    <div class="text-center mb-10"><h2 class="text-2xl font-black uppercase text-white">Security Pad</h2></div>
+    <div id="pinDots" class="flex gap-5 mb-10">
+        <div class="w-4 h-4 rounded-full border-2 border-white/30"></div><div class="w-4 h-4 rounded-full border-2 border-white/30"></div><div class="w-4 h-4 rounded-full border-2 border-white/30"></div><div class="w-4 h-4 rounded-full border-2 border-white/30"></div>
+    </div>
+    <div class="grid grid-cols-3 gap-5 w-full max-w-xs">
+        <script>for(let i=1;i<=9;i++) document.write(`<button onclick="window.pressPin('${i}')" class="py-6 glass font-black text-2xl text-white rounded-2xl active:bg-[#ff9933]">${i}</button>`)</script>
+        <button onclick="window.clearP()" class="py-6 font-black text-rose-500">CLR</button>
+        <button onclick="window.pressPin('0')" class="py-6 glass font-black text-2xl text-white rounded-2xl active:bg-[#ff9933]">0</button>
+        <button onclick="window.showView('view-home')" class="py-6 font-black text-slate-500 uppercase text-[10px]">Back</button>
+    </div>
+</div>
+
+<div id="view-cust-gate" class="app-view">
+    <div class="glass p-8 w-full max-w-sm border-b-4 border-[#ff9933]">
+        <h2 id="gateTitle" class="text-2xl font-black text-white text-center mb-8 uppercase italic">Vault Access</h2>
+        <div id="authTabs" class="flex gap-2 mb-6 bg-black/40 p-1 rounded-xl">
+            <button id="tL" onclick="window.toggleAuth('login')" class="flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab">Login</button>
+            <button id="tR" onclick="window.toggleAuth('reg')" class="flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-slate-400">Register</button>
+        </div>
+        
+        <div id="boxL">
+            <input type="text" id="lU" placeholder="Username" class="m-input">
+            <input type="password" id="lP" placeholder="Password" class="m-input">
+            <button onclick="window.handleLogin()" class="btn-bhagwa mt-2">Unlock Vault</button>
+            <p onclick="window.toggleAuth('forget')" class="text-center text-[10px] text-slate-500 mt-6 cursor-pointer uppercase font-bold hover:text-[#ff9933]">Forget Password?</p>
+        </div>
+        
+        <div id="boxR" style="display: none;">
+            <input type="text" id="rN" placeholder="Full Name" class="m-input">
+            <input type="text" id="rPh" placeholder="Mobile No (10 digits)" class="m-input">
+            <input type="text" id="rU" placeholder="Set Username" class="m-input">
+            <input type="password" id="rP" placeholder="Set Password" class="m-input">
+            <button onclick="window.handleReg()" class="btn-bhagwa mt-2">Create Vault ID</button>
+        </div>
+        
+        <div id="boxF" style="display: none;">
+            <input type="text" id="fU" placeholder="Username" class="m-input">
+            <input type="text" id="fPh" placeholder="Confirm Mobile" class="m-input">
+            <input type="password" id="fN1" placeholder="New Password" class="m-input">
+            <button onclick="window.handleReset()" class="btn-bhagwa mt-2 bg-rose-600">Update Cloud</button>
+        </div>
+        <button onclick="window.showView('view-home')" class="w-full text-slate-600 text-[10px] mt-8 uppercase border-t border-white/5 pt-4 tracking-widest">← Exit</button>
+    </div>
+</div>
+
+<div id="view-admin-app" class="app-view" style="align-items: flex-start;">
+    <div class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 py-6">
+        
+        <div class="w-full lg:w-1/3 p-6 glass border-t-4 border-[#ff9933]">
+            <h2 class="text-xl font-black mb-6 uppercase text-white italic">Billing Hub</h2>
+            <div class="flex gap-2 mb-6 bg-black/40 p-1 rounded-xl">
+                <button onclick="window.setBillMode('PAID')" id="mP" class="w-1/2 py-3 rounded-lg font-black text-[10px] active-tab">PAID</button>
+                <button onclick="window.setBillMode('UNPAID')" id="mU" class="w-1/2 py-3 rounded-lg font-black text-[10px] text-white">UNPAID</button>
+            </div>
+            <div class="space-y-1">
+                <input type="text" id="inName" oninput="window.sync()" placeholder="Customer Name" class="m-input">
+                <input type="text" id="inPhone" oninput="window.sync()" placeholder="Mobile No (Must match Vault)" class="m-input">
+                <input type="text" id="inVehicle" oninput="window.sync()" placeholder="Vehicle No / Transport" class="m-input">
+                <input type="text" id="inItem" oninput="window.sync()" placeholder="Item/Furniture" class="m-input">
+                <div class="flex gap-2"><input type="number" id="inAmt" oninput="window.sync()" placeholder="₹ Base" class="m-input w-1/2"><input type="number" id="inDisc" oninput="window.sync()" placeholder="₹ Disc" class="m-input w-1/2"></div>
+                <select id="inMethod" onchange="window.sync()" class="m-input"><option>UPI / QR CODE</option><option>CASH</option></select>
+                <select id="inWarranty" onchange="window.sync()" class="m-input"><option>No Warranty</option><option>1 Year</option><option>5 Years</option></select>
+                <textarea id="inDetail" oninput="window.sync()" placeholder="Extra Notes..." class="m-input h-16"></textarea>
+                <div id="dueDiv" style="display: none;"><input type="text" id="inPostDate" oninput="window.sync()" placeholder="Due Date (DD/MM/YYYY)" class="m-input border-rose-500"></div>
+            </div>
+            <button onclick="window.saveBillMaster()" class="btn-bhagwa mt-4">Save & Print Bill</button>
+            <div class="grid grid-cols-2 gap-2 mt-4">
+                <button onclick="window.fetchCloudData('UNPAID')" class="py-3 bg-rose-500/10 text-rose-500 rounded-xl font-bold text-[9px] border border-rose-500/20 uppercase">Pending</button>
+                <button onclick="window.fetchCloudData('PAID')" class="py-3 bg-emerald-500/10 text-emerald-500 rounded-xl font-bold text-[9px] border border-emerald-500/20 uppercase">History</button>
+            </div>
+            <button onclick="window.showView('view-home')" class="w-full py-2 text-slate-500 uppercase mt-4 text-[9px]">Logout Admin</button>
+        </div>
+
+        <div class="w-full lg:w-2/3 overflow-x-auto bg-slate-900/50 p-6 rounded-[40px]">
+            <div id="receipt-render">
+                <div id="stP" class="stamp stamp-paid">PAID</div><div id="stU" class="stamp stamp-unpaid" style="display:none">PENDING</div>
+                <div class="flex justify-between items-start mb-8 border-b-2 pb-6">
+                    <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-24 rounded-2xl" crossorigin="anonymous">
+                    <div class="text-right">
+                        <h1 class="text-4xl font-black uppercase text-slate-900 leading-none">Patel Traders</h1>
+                        <h2 class="text-[14px] font-black text-[#ff9933] uppercase tracking-[0.2em] mt-2 mb-1">फर्नीचर शॉप</h2>
+                        <p class="text-[11px] font-black text-slate-800 uppercase italic">प्रो.: संजय कुमार (+91 9565697314)</p>
+                        <p class="text-[11px] font-bold text-slate-500 uppercase mt-1">गांधीनगर, तालग्राम, कन्नौज (U.P.)</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 mb-10 text-[13px] uppercase font-bold">
+                    <div>
+                        <p class="text-slate-400 text-[10px] mb-1">Customer Details</p>
+                        <h3 id="vName" class="text-3xl font-black text-slate-800 italic">Guest</h3>
+                        <p id="vPhone" class="text-slate-500">+91 0000000000</p>
+                        <p class="mt-4 font-black">VEHICLE/TRANSPORT: <span id="vVehicle" class="text-slate-900">--</span></p>
+                    </div>
+                    <div class="text-right leading-loose pt-2">
+                        INV: <span id="vInv" class="font-black text-slate-500">#AUTO</span><br>
+                        DATE: <span id="vDate" class="text-slate-900">--</span><br>
+                        WARRANTY: <span id="vWar" class="text-emerald-600">None</span><br>
+                        <span id="vDueBox" class="text-rose-600" style="display:none">DUE: <span id="vPostDate">--</span></span>
+                    </div>
+                </div>
+                <div class="min-h-[220px] border-y-2 py-8 font-bold uppercase text-slate-800">
+                    <table class="w-full">
+                        <tr class="text-[10px] text-slate-400 text-left border-b pb-4"><th>ITEM DESCRIPTION</th><th class="text-right">TOTAL</th></tr>
+                        <tr><td class="pt-6"><span id="vItem" class="text-2xl font-black italic">Furniture Item</span><br><small id="vDetail" class="text-slate-400 normal-case block mt-1"></small></td><td id="vBase" class="pt-6 text-right font-black text-2xl">₹ 0</td></tr>
+                    </table>
+                </div>
+                <div class="mt-10 p-8 bg-slate-50 rounded-[40px] flex justify-between items-center border">
+                    <div><p class="text-[11px] text-slate-400 font-black uppercase mb-1">Total Payable</p><h2 id="vTotal" class="text-6xl font-black text-slate-900 tracking-tighter">₹ 0</h2></div>
+                    <div class="text-right">
+                        <div id="vQRB" class="mb-2" style="display:none"><img id="vQR" src="" class="w-20 h-20 border-2 border-white rounded shadow-sm" crossorigin="anonymous"></div>
+                        <p id="vMeth" class="text-2xl font-black text-[#ff9933] uppercase italic">UPI</p>
+                    </div>
+                </div>
+                <p class="mt-12 text-center text-[9px] font-bold text-slate-300 uppercase tracking-[0.5em]">Identity: 01-01-1983</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="view-cust-app" class="app-view" style="justify-content: flex-start;">
+    <div class="w-full max-w-5xl mx-auto py-6">
+        <div class="flex justify-between items-center mb-8 glass p-10 border-l-8 border-[#ff9933]">
+            <div>
+                <h2 class="text-4xl font-black uppercase text-white">My <span class="text-[#ff9933]">Vault</span></h2>
+                <p id="cNameDisplay" class="text-xs text-[#ff9933] font-bold mt-1 uppercase">Verified Owner</p>
+                <p id="cIDDisplay" class="text-[9px] text-white/40 uppercase mt-1 italic tracking-widest">Vault ID: LOADING...</p>
+            </div>
+            <button onclick="location.reload()" class="px-8 py-3 bg-rose-600 text-white font-black rounded-xl text-xs uppercase">Secure Logout</button>
+        </div>
+
+        <div class="glass p-6 mb-10 border-l-4 border-emerald-500 bg-emerald-500/5">
+            <h3 class="text-emerald-400 font-black text-[11px] uppercase mb-4 tracking-widest">🔍 Find Missing Receipt</h3>
+            <div class="flex flex-col md:flex-row gap-3">
+                <input type="text" id="linkInvInput" placeholder="Invoice No (e.g. PT-B-123456)" class="m-input m-0 flex-1 border-emerald-500/30 focus:border-emerald-500 text-sm">
+                <input type="text" id="linkDateInput" placeholder="Purchase Date (DD/MM/YYYY)" class="m-input m-0 flex-1 border-emerald-500/30 focus:border-emerald-500 text-sm">
+                <button id="verifyBtn" onclick="window.linkAndOpenReceipt()" class="btn-bhagwa w-full md:w-auto px-8 py-3 m-0 text-xs shadow-none">VERIFY & OPEN</button>
+            </div>
+        </div>
+
+        <h3 class="text-rose-500 font-black uppercase text-[10px] mb-4 ml-2 italic">⚠️ Pending Payments</h3>
+        <div id="uGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"></div>
+        <h3 class="text-emerald-500 font-black uppercase text-[10px] mb-4 ml-2 italic">✅ Paid History</h3>
+        <div id="pGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"></div>
+    </div>
+</div>
+
+<div id="view-admin-cloud" class="app-view" style="justify-content: flex-start;">
+    <div class="w-full max-w-5xl mx-auto py-6">
+        <div class="flex justify-between items-center mb-10 border-b border-white/10 pb-6">
+            <h2 id="cloudTitle" class="text-3xl font-black uppercase text-white italic">Admin <span class="text-[#ff9933]">Cloud</span></h2>
+            <button onclick="window.showView('view-admin-app')" class="px-8 py-2 glass text-white font-black rounded-lg text-xs uppercase">← Back</button>
+        </div>
+        <div id="adminGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"></div>
+    </div>
+</div>
+
+<div id="payModal" class="fixed inset-0 bg-black/95 z-[1000] hidden items-center justify-center p-6 backdrop-blur-md">
+    <div class="glass p-12 max-w-sm w-full text-center border-t-8 border-[#ff9933]">
+        <h2 class="text-2xl font-black text-white mb-4 uppercase italic">Scan to Pay</h2>
+        <p id="pmAmt" class="text-5xl font-black text-[#ff9933] mb-10 tracking-tighter"></p>
+        <div class="bg-white p-6 rounded-[40px] inline-block mb-10 shadow-2xl border-4 border-[#ff9933]/20"><img id="pmQR" src="" class="w-56 h-56" crossorigin="anonymous"></div>
+        <button onclick="document.getElementById('payModal').style.display='none'" class="btn-bhagwa bg-rose-600">Close Vault</button>
+    </div>
+</div>
+
+<script>
+    const MASTER_CONFIG = {
+        URL: "https://script.google.com/macros/s/AKfycbyqGgozh6soglW6b_8s7LSr96_gIGNaweAnG1CQn-_F5HytVi9pYGi3GDX-lSz-mEyD/exec",
+        MASTER_ID: "1895656973148",
+        ADMIN_PIN: "7314",
+        SECRET_ID: "01-01-1983"
+    };
+
+    window.pCode = ""; 
+    window.bMode = "PAID"; 
+    window.activeU = null; 
+    window.dbRecs = [];
+
+    // --- 1. VIEW NAVIGATION ---
+    window.showView = function(viewId) {
+        try {
+            document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none');
+            const target = document.getElementById(viewId);
+            if (target) {
+                target.style.display = 'flex';
+            }
+            if (viewId === 'view-home') { 
+                window.pCode = ""; 
+                window.upUI(); 
+            }
+            if (viewId === 'view-cust-gate') {
+                window.toggleAuth('login');
+            }
+            window.scrollTo(0, 0);
+        } catch (error) {
+            console.error("Navigation Error:", error);
+        }
+    };
+
+    // --- 2. ADMIN SECURITY ---
+    window.adminGatewayInit = function() {
+        let input = prompt("Master Access Key Required:");
+        if (input && input.trim() === MASTER_CONFIG.MASTER_ID) { 
+            window.showView('view-admin-gate'); 
+        } else if (input !== null) { 
+            alert("❌ Unauthorized Access Blocked!"); 
+        }
+    };
+
+    window.pressPin = function(num) {
+        if (window.pCode.length < 4) { 
+            window.pCode += num; 
+            window.upUI(); 
+        }
+        if (window.pCode === MASTER_CONFIG.ADMIN_PIN) {
+            window.showView('view-admin-app');
+            window.sync();
+            window.pCode = "";
+        } else if (window.pCode.length === 4) {
+            alert("❌ Incorrect Pin!");
+            window.pCode = "";
+            setTimeout(window.upUI, 300);
+        }
+    };
+
+    window.clearP = function() { 
+        window.pCode = ""; 
+        window.upUI(); 
+    };
+
+    window.upUI = function() {
+        const dots = document.querySelectorAll('#pinDots div');
+        dots.forEach((dot, i) => { 
+            dot.style.background = i < window.pCode.length ? '#ff9933' : 'transparent'; 
+        });
+    };
+
+    // --- 3. CUSTOMER AUTHENTICATION ENGINE ---
+    window.toggleAuth = function(type) {
+        document.getElementById('gateTitle').innerText = type === 'forget' ? 'Recovery Portal' : 'Vault Access';
+        document.getElementById('authTabs').style.display = type === 'forget' ? 'none' : 'flex';
+        
+        ['boxL', 'boxR', 'boxF'].forEach(b => document.getElementById(b).style.display = 'none');
+        
+        if (type === 'login') document.getElementById('boxL').style.display = 'block';
+        if (type === 'reg') document.getElementById('boxR').style.display = 'block';
+        if (type === 'forget') document.getElementById('boxF').style.display = 'block';
+
+        document.getElementById('tL').classList.toggle('active-tab', type === 'login');
+        document.getElementById('tR').classList.toggle('active-tab', type === 'reg');
+    };
+
+    window.handleLogin = async function() {
+        const u = document.getElementById('lU').value.trim().toLowerCase();
+        const p = document.getElementById('lP').value.trim();
+        
+        if (!u || !p) return alert("⚠️ Please Fill Credentials!");
+        
+        document.getElementById('gateTitle').innerText = "Verifying...";
+
+        try {
+            const res = await fetch(`${MASTER_CONFIG.URL}?action=getUsers`);
+            const users = await res.json();
+            const user = users.find(x => String(x.user).toLowerCase() === u && String(x.pass) === p);
+
+            if (user) {
+                window.activeU = user;
+                document.getElementById('cNameDisplay').innerText = "Verified: " + user.name;
+                document.getElementById('cIDDisplay').innerText = "Vault ID: " + (user.custid || "PT-V-NEW");
+                window.showView('view-cust-app');
+                window.loadVault();
+            } else { 
+                alert("❌ Invalid Username or Password!"); 
+                document.getElementById('gateTitle').innerText = "Vault Access";
+            }
+        } catch (e) { 
+            alert("❌ Data Sync Error! Please check Internet Connection."); 
+            document.getElementById('gateTitle').innerText = "Vault Access";
+        }
+    };
+
+    window.handleReg = async function() {
+        const n = document.getElementById('rN').value.trim();
+        const ph = document.getElementById('rPh').value.trim();
+        const u = document.getElementById('rU').value.trim().toLowerCase();
+        const p = document.getElementById('rP').value.trim();
+
+        if (!n || !ph || !u || !p) return alert("⚠️ Please fill all details!");
+
+        document.getElementById('gateTitle').innerText = "Checking...";
+        try {
+            const res = await fetch(`${MASTER_CONFIG.URL}?action=getUsers`);
+            const users = await res.json();
+            const phone10 = ph.replace(/\D/g, "").slice(-10);
+            
+            // Strict Duplicate Check
+            const isDuplicate = users.find(x => 
+                String(x.user).toLowerCase() === u || 
+                String(x.phone).replace(/\D/g, "").slice(-10) === phone10
+            );
+
+            if (isDuplicate) {
+                document.getElementById('gateTitle').innerText = "Vault Access";
+                return alert("❌ Account already exists! If you forgot your password, please use 'Forget Password'.");
+            }
+
+            const cid = "PT-V-" + Math.floor(100000 + Math.random() * 900000);
+            const data = { 
+                type: "USER", 
+                custid: cid, 
+                name: n, 
+                phone: ph, 
+                user: u, 
+                pass: p 
+            };
+            
+            await fetch(MASTER_CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+            alert("✅ Account Created Successfully! Vault ID: " + cid);
+            document.getElementById('gateTitle').innerText = "Vault Access";
+            window.toggleAuth('login');
+        } catch (e) { 
+            document.getElementById('gateTitle').innerText = "Vault Access";
+            alert("❌ Connection Error! Please try again."); 
+        }
+    };
+
+    window.handleReset = async function() {
+        const inputUser = document.getElementById('fU').value.trim().toLowerCase();
+        const ph = document.getElementById('fPh').value.trim();
+        const n = document.getElementById('fN1').value.trim();
+        
+        if (!inputUser || !ph || !n) return alert("⚠️ Please fill all details!");
+
+        document.getElementById('gateTitle').innerText = "Updating...";
+        try {
+            const res = await fetch(`${MASTER_CONFIG.URL}?action=getUsers`);
+            const users = await res.json();
+            const phone10 = ph.replace(/\D/g, "").slice(-10);
+
+            // Match ONLY Username + Phone
+            const found = users.find(x => 
+                String(x.user).toLowerCase() === inputUser && 
+                String(x.phone).replace(/\D/g, "").slice(-10) === phone10
+            );
+            
+            if (found) {
+                await fetch(MASTER_CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "RESET", user: found.user, newPass: n }) });
+                alert("✅ Password Updated Successfully!");
+                document.getElementById('gateTitle').innerText = "Vault Access";
+                window.toggleAuth('login');
+            } else { 
+                alert("❌ Verification Failed! Username and Mobile Number do not match."); 
+                document.getElementById('gateTitle').innerText = "Recovery Portal";
+            }
+        } catch (e) { 
+            alert("❌ Error connecting to cloud!"); 
+            document.getElementById('gateTitle').innerText = "Recovery Portal";
+        }
+    };
+
+    // --- 4. BILLING ENGINE ---
+    window.setBillMode = function(m) {
+        window.bMode = m;
+        document.getElementById('mP').classList.toggle('active-tab', m === 'PAID');
+        document.getElementById('mU').classList.toggle('active-tab', m === 'UNPAID');
+        document.getElementById('stP').style.display = (m === 'PAID') ? 'flex' : 'none';
+        document.getElementById('stU').style.display = (m === 'UNPAID') ? 'flex' : 'none';
+        document.getElementById('vQRB').style.display = (m === 'UNPAID') ? 'block' : 'none';
+        document.getElementById('dueDiv').style.display = (m === 'PAID') ? 'none' : 'block';
+        document.getElementById('vDueBox').style.display = (m === 'PAID') ? 'none' : 'block';
+        window.sync();
+    };
+
+    window.sync = function() {
+        const a = parseFloat(document.getElementById('inAmt').value) || 0;
+        const d = parseFloat(document.getElementById('inDisc').value) || 0;
+        const t = Math.max(0, a - d);
+
+        document.getElementById('vName').innerText = document.getElementById('inName').value || "Guest User";
+        document.getElementById('vPhone').innerText = document.getElementById('inPhone').value || "+91 0000000000";
+        document.getElementById('vVehicle').innerText = (document.getElementById('inVehicle').value || "--").toUpperCase();
+        document.getElementById('vItem').innerText = document.getElementById('inItem').value || "Furniture Item";
+        document.getElementById('vDetail').innerText = document.getElementById('inDetail').value || "";
+        document.getElementById('vTotal').innerText = "₹ " + t.toLocaleString();
+        document.getElementById('vBase').innerText = "₹ " + a.toLocaleString();
+        document.getElementById('vMeth').innerText = document.getElementById('inMethod').value;
+        document.getElementById('vWar').innerText = document.getElementById('inWarranty').value;
+        document.getElementById('vPostDate').innerText = document.getElementById('inPostDate').value || "--";
+        document.getElementById('vDate').innerText = new Date().toLocaleDateString('en-GB');
+        
+        // Generate QR dynamically
+        document.getElementById('vQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Pay PatelTraders Amount: ₹${t}`;
+    };
+
+    // --- 5. VAULT ENGINE (STRICT MATCHING: MOBILE ONLY) ---
+    window.loadVault = async function() {
+        const gP = document.getElementById('pGrid');
+        const gU = document.getElementById('uGrid');
+        
+        gP.innerHTML = gU.innerHTML = "<p class='ml-4 italic text-[#ff9933]'>Syncing Records from Cloud...</p>";
+        
+        try {
+            const res = await fetch(`${MASTER_CONFIG.URL}?action=getBills`);
+            window.dbRecs = await res.json();
+            
+            const exactUserMobile = String(window.activeU.phone).replace(/\D/g, "").slice(-10);
+            
+            // Strict match: Only phone number (10 digits)
+            const mine = window.dbRecs.filter(r => {
+                const billPhone = String(r.phone || "").replace(/\D/g, "").slice(-10);
+                return billPhone === exactUserMobile && exactUserMobile.length >= 10;
+            });
+            
+            const p = mine.filter(r => String(r.mode).toUpperCase() === "PAID");
+            const u = mine.filter(r => String(r.mode).toUpperCase() !== "PAID");
+
+            gU.innerHTML = u.length ? u.map(r => `
+                <div class="glass p-6 border-b-4 border-rose-500/40 relative">
+                    <p class="text-[10px] text-slate-500 font-bold">${r.date}</p>
+                    <h3 class="text-lg font-black text-white uppercase truncate mt-1">${r.item}</h3>
+                    <h2 class="text-3xl font-black text-rose-400 mt-2">${r.total}</h2>
+                    <button onclick="window.popPayWindow('${r.total}')" class="mt-6 w-full py-3 btn-bhagwa bg-rose-600 text-[10px]">SCAN & PAY</button>
+                </div>
+            `).join('') : "<p class='ml-4 text-xs text-slate-500 italic'>No dues pending.</p>";
+
+            gP.innerHTML = p.length ? p.map(r => `
+                <div class="glass p-6 border-b-4 border-emerald-500/40">
+                    <p class="text-[10px] text-slate-500 font-bold">${r.date}</p>
+                    <h3 class="text-lg font-black text-white uppercase truncate mt-1">${r.item}</h3>
+                    <h2 class="text-3xl font-black text-emerald-400 mt-2">${r.total}</h2>
+                    <button onclick="window.handleSilentPDF(${window.dbRecs.indexOf(r)}, 'view-cust-app')" class="mt-6 w-full py-3 glass text-[10px] font-black border border-white/10 uppercase">Download PDF</button>
+                </div>
+            `).join('') : "<p class='ml-4 text-xs text-slate-500 italic'>No history found.</p>";
+            
+        } catch (e) { 
+            gU.innerHTML = "<p class='ml-4 text-rose-500 font-bold'>Sync Failed! Check connection.</p>"; 
+            gP.innerHTML = "<p class='ml-4 text-rose-500 font-bold'>Sync Failed! Check connection.</p>";
+        }
+    };
+
+    window.popPayWindow = function(a) {
+        document.getElementById('pmAmt').innerText = a;
+        document.getElementById('pmQR').src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=Pay PatelTraders Amount: ${a}`;
+        document.getElementById('payModal').style.display = 'flex';
+    };
+
+    // 🚩 MISSING RECEIPT FINDER (WITH DATE SECURITY)
+    window.linkAndOpenReceipt = async function() {
+        const invToFind = document.getElementById('linkInvInput').value.trim().toUpperCase();
+        const dateToFind = document.getElementById('linkDateInput').value.trim().replace(/-/g, '/');
+        
+        if(!invToFind || !dateToFind) return alert("⚠️ Please enter both Invoice Number and Purchase Date!");
+        
+        const btn = document.getElementById('verifyBtn');
+        btn.innerText = "Verifying on Cloud...";
+        
+        try {
+            let foundIdx = window.dbRecs.findIndex(r => String(r.inv).toUpperCase() === invToFind && String(r.date) === dateToFind);
+            
+            // If not found in local state, query cloud directly
+            if(foundIdx === -1) {
+                const res = await fetch(`${MASTER_CONFIG.URL}?action=getBills`);
+                const allBills = await res.json();
+                const foundBill = allBills.find(r => String(r.inv).toUpperCase() === invToFind && String(r.date) === dateToFind);
+                if(foundBill) {
+                    window.dbRecs.push(foundBill);
+                    foundIdx = window.dbRecs.length - 1;
+                }
+            }
+            
+            btn.innerText = "VERIFY & OPEN";
+            
+            if(foundIdx !== -1) {
+                alert("✅ Receipt Verified! Generating PDF...");
+                document.getElementById('linkInvInput').value = ""; 
+                document.getElementById('linkDateInput').value = ""; 
+                window.handleSilentPDF(foundIdx, 'view-cust-app');
+            } else {
+                alert("❌ Verification Failed! Invoice Number and Date do not match any records.");
+            }
+        } catch(e) {
+            alert("❌ Network Error while verifying! Try again.");
+            btn.innerText = "VERIFY & OPEN";
+        }
+    };
+
+    // --- 6. ADMIN CLOUD ---
+    window.fetchCloudData = async function(filter) {
+        window.showView('view-admin-cloud');
+        const grid = document.getElementById('adminGrid');
+        grid.innerHTML = "<p class='ml-4 italic text-[#ff9933]'>Reading Cloud Database...</p>";
+        document.getElementById('cloudTitle').innerHTML = filter === 'PAID' ? "History <span class='text-emerald-500'>Records</span>" : "Pending <span class='text-rose-500'>Dues</span>";
+
+        try {
+            const res = await fetch(`${MASTER_CONFIG.URL}?action=getBills`);
+            window.dbRecs = (await res.json()).reverse();
+            const filtered = window.dbRecs.filter(r => String(r.mode).toUpperCase() === filter);
+
+            grid.innerHTML = filtered.map(r => `
+                <div class="glass p-6 ${filter === 'PAID' ? 'border-emerald-500/20' : 'border-rose-500/20'}">
+                    <p class="text-[10px] text-slate-500 font-bold">${r.date} | ${r.inv}</p>
+                    <h3 class="text-lg text-white font-black uppercase truncate mt-2">${r.name}</h3>
+                    <p class="font-black text-2xl mt-1 ${filter === 'PAID' ? 'text-emerald-400' : 'text-rose-400'}">${r.total}</p>
+                    <div class="grid gap-3 mt-6">
+                        ${filter !== 'PAID' ? `<button onclick="window.markPaidOk('${r.inv}')" class="py-3 bg-emerald-600 text-white rounded-xl text-[10px] font-black uppercase shadow-lg">Mark Paid ✅</button>` : ''}
+                        <button onclick="window.handleSilentPDF(${window.dbRecs.indexOf(r)}, 'view-admin-cloud')" class="py-3 glass text-[10px] font-black uppercase">Reprint PDF Bill</button>
+                    </div>
+                </div>
+            `).join('');
+        } catch(e) {
+            grid.innerHTML = "<p class='ml-4 text-rose-500'>Database Connection Failed.</p>";
+        }
+    };
+
+    window.markPaidOk = async function(inv) {
+        if (!confirm(`Are you sure you want to mark Invoice ${inv} as PAID?`)) return;
+        
+        try {
+            await fetch(MASTER_CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "MARK_PAID", inv: inv }) });
+            alert("✅ Bill Settled in Cloud!");
+            window.fetchCloudData('UNPAID');
+        } catch(e) {
+            alert("❌ Failed to update status!");
+        }
+    };
+
+    // --- 7. PDF ENGINE ---
+    window.handleSilentPDF = async function(idx, ret) {
+        const r = window.dbRecs[idx];
+        const v = document.getElementById('view-admin-app');
+        
+        // Setup hidden render
+        v.style.display = 'flex'; 
+        v.style.opacity = '0'; 
+        v.style.position = 'fixed';
+        
+        // Inject Data
+        document.getElementById('vName').innerText = r.name || "Guest";
+        document.getElementById('vPhone').innerText = r.phone || "";
+        document.getElementById('vVehicle').innerText = r.vehicle || "--";
+        document.getElementById('vInv').innerText = r.inv;
+        document.getElementById('vTotal').innerText = r.total;
+        document.getElementById('vItem').innerText = r.item;
+        document.getElementById('vDetail').innerText = r.detail || "";
+        document.getElementById('vWar').innerText = r.warranty || "None";
+        document.getElementById('vPostDate').innerText = r.postdate || "--";
+        window.setBillMode(r.mode || "PAID");
+
+        // Wait for render and generate PDF
+        setTimeout(async () => {
+            try {
+                const canvas = await html2canvas(document.getElementById('receipt-render'), {
+                    scale: 2,
+                    useCORS: true, 
+                    allowTaint: true
+                });
+                const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
+                pdf.save(`${r.inv}.pdf`);
+            } catch (error) {
+                alert("❌ Error generating PDF!");
+            } finally {
+                v.style.display = 'none'; 
+                v.style.opacity = '1'; 
+                v.style.position = 'relative';
+                window.showView(ret);
+            }
+        }, 1200); // 1.2s delay ensures fonts and images load properly
+    };
+
+    window.saveBillMaster = async function() {
+        const n = document.getElementById('inName').value.trim();
+        const ph = document.getElementById('inPhone').value.trim();
+        
+        if(!n || !ph) return alert("⚠️ Customer Name and Mobile Number are REQUIRED to save a bill!");
+
+        const inv = "PT-B-" + Date.now().toString().slice(-6);
+        document.getElementById('vInv').innerText = inv;
+        
+        const d = {
+            type: "BILL", 
+            inv: inv, 
+            name: n, 
+            phone: ph,
+            vehicle: document.getElementById('inVehicle').value,
+            item: document.getElementById('inItem').value,
+            total: document.getElementById('vTotal').innerText,
+            date: document.getElementById('vDate').innerText,
+            mode: window.bMode,
+            identity_dob: MASTER_CONFIG.SECRET_ID,
+            warranty: document.getElementById('inWarranty').value,
+            detail: document.getElementById('inDetail').value,
+            postdate: document.getElementById('inPostDate').value
+        };
+
+        try {
+            // 1. Save to Cloud
+            await fetch(MASTER_CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
+            
+            // 2. Generate PDF visually
+            const canvas = await html2canvas(document.getElementById('receipt-render'), {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true
+            });
+            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
+            pdf.save(`${inv}.pdf`);
+            
+            alert("✅ Bill Saved & Synced to Cloud Successfully!");
+            
+            // 3. Clear Inputs automatically
+            document.getElementById('inName').value = "";
+            document.getElementById('inPhone').value = "";
+            document.getElementById('inAmt').value = "";
+            document.getElementById('inDisc').value = "";
+            window.sync();
+            
+        } catch(e) {
+            alert("❌ Failed to save bill. Please check your internet connection and try again.");
+        }
+    };
+</script>
+</body>
+</html>
