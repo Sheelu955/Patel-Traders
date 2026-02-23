@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Patel Traders | ERP Final Fix</title>
+    <title>Patel Traders | ERP Master V3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -27,7 +27,7 @@
         <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-24 mx-auto mb-6 rounded-3xl border-2 border-[#ff9933]" crossorigin="anonymous">
         <h1 class="text-4xl font-black italic mb-1 uppercase tracking-tighter">Patel <span class="text-[#ff9933]">Traders</span></h1>
         <h2 class="text-[#ff9933] text-[15px] font-black tracking-[0.3em] mb-1">फर्नीचर शॉप</h2>
-        <p class="text-white/40 text-[10px] mb-8 font-bold italic">GANDHINAGAR TALGRM RURAL CHHIBRAMAU INDERGRAH MAARG</p>
+        <p class="text-white/40 text-[10px] mb-8 font-bold italic">गांधीनगर, तालग्राम, कन्नौज (U.P.)</p>
         <button onclick="window.adminGatewayInit()" class="btn-bhagwa mb-4">Admin Gateway</button>
         <button onclick="window.showView('view-cust-gate')" class="w-full py-4 glass font-black uppercase text-xs tracking-widest text-[#ff9933]">Customer Vault</button>
     </div>
@@ -83,7 +83,7 @@
                     <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-24 rounded-2xl" crossorigin="anonymous">
                     <div class="text-right">
                         <h1 class="text-4xl font-black uppercase text-slate-900">Patel Traders</h1>
-                        <p class="text-[11px] font-black text-slate-800 uppercase">GANDHINAGAR TALGRAM RURAL 209731 KUNNAUJ UTTAR PRADESH</p>
+                        <p class="text-[11px] font-black text-slate-800 uppercase">गांधीनगर, तालग्राम, कन्नौज, उत्तर प्रदेश - 209731</p>
                         <p class="text-[11px] font-black text-slate-500 italic">संजय कुमार: +91 9565697314</p>
                     </div>
                 </div>
@@ -96,7 +96,7 @@
                 </div>
                 <div class="mt-10 p-8 bg-slate-50 rounded-[40px] flex justify-between items-center border border-slate-100">
                     <div><p class="text-[11px] text-slate-400 font-black">PAYABLE AMOUNT</p><h2 id="vTotal" class="text-6xl font-black text-slate-900">₹ 0</h2></div>
-                    <div class="text-right"><p id="vPostDisplay" class="text-rose-600 font-black text-sm"></p><p class="text-[9px] text-slate-400 mt-2">Certified Digital Receipt</p></div>
+                    <div class="text-right"><p id="vPostDisplay" class="text-rose-600 font-black text-sm"></p><p class="text-[9px] text-slate-400 mt-2">Verified Digital Receipt</p></div>
                 </div>
             </div>
         </div>
@@ -125,11 +125,10 @@
 </div>
 
 <script>
-    // ⚙️ FIXED CONFIG & URL
     const CONFIG = { 
-        URL: "https://script.google.com/macros/s/AKfycbyqGgozh6soglW6b_8s7LSr96_gIGNaweAnG1CQn-_F5HytVi9pYGi3GDX-lSz-mEyD/exec",
-        ID: "14",
-        PIN: "7314"
+        URL: "https://script.google.com/macros/s/AKfycbyqGgozh6soglW6b_8s7LSr96_gIGNaweAnG1CQn-_F5HytVi9pYGi3GDX-lSz-mEyD/exec", 
+        ID: "1895656973148", 
+        PIN: "7314" 
     };
 
     window.pCode = ""; window.bMode = "PAID"; window.activeU = null; window.dbRecs = [];
@@ -195,7 +194,6 @@
         const inv = "PT-B-" + Date.now().toString().slice(-6);
         const d = { type: "BILL", inv, name: document.getElementById('inName').value, phone: document.getElementById('inPhone').value, vehicle: document.getElementById('inVehicle').value, item: document.getElementById('inItem').value, total: document.getElementById('vTotal').innerText, date: document.getElementById('vDate').innerText, mode: window.bMode, warranty: document.getElementById('inWarranty').value, detail: document.getElementById('inDetail').value, postdate: document.getElementById('inPostDate').value };
         await fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
-        // Generate PDF
         const canvas = await html2canvas(document.getElementById('receipt-render'), {scale: 2, useCORS: true});
         const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
         pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
@@ -218,15 +216,11 @@
         if(foundIdx !== -1) window.handleSilentPDF(foundIdx, 'view-cust-app'); else alert("Bill Not Found!");
     };
 
-    // 🛠️ REWRITTEN PDF FUNCTION (STRICT NO-GUEST POLICY)
     window.handleSilentPDF = async function(idx, ret) {
         const r = window.dbRecs[idx];
         const v = document.getElementById('view-admin-app');
-        
-        // Step 1: Force UI Switch
         v.style.display = 'flex'; v.style.opacity = '0.01'; v.style.position = 'fixed';
         
-        // Step 2: Hard-Inject Data into DOM
         const nameEl = document.getElementById('vName');
         const phoneEl = document.getElementById('vPhone');
         
@@ -242,28 +236,15 @@
         document.getElementById('stP').style.display = r.mode === 'PAID' ? 'flex' : 'none';
         document.getElementById('stU').style.display = r.mode !== 'PAID' ? 'flex' : 'none';
 
-        // Step 3: Verify and Capture (Wait for DOM to settle)
         setTimeout(async () => {
-            if (nameEl.innerText === "Guest") { // Double Check
-                nameEl.innerText = r.name; 
-                phoneEl.innerText = r.phone;
-            }
-            
-            const canvas = await html2canvas(document.getElementById('receipt-render'), {
-                scale: 2, 
-                useCORS: true,
-                allowTaint: true,
-                logging: false
-            });
-            
+            nameEl.innerText = r.name; // Double-Force ensure
+            const canvas = await html2canvas(document.getElementById('receipt-render'), { scale: 2, useCORS: true });
             const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
             pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
             pdf.save(r.inv + "_" + r.name + ".pdf");
-            
-            // Step 4: Reset
             v.style.display = 'none'; v.style.opacity = '1'; v.style.position = 'relative';
             window.showView(ret);
-        }, 1200); // 1.2 seconds delay for safe rendering
+        }, 1200);
     };
 </script>
 </body>
