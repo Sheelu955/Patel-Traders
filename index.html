@@ -19,35 +19,54 @@
             background: var(--bg-dark);
             color: #ffffff;
             margin: 0;
-            height: 100vh;
-            overflow: hidden;
+            min-height: 100vh;
+            overflow-x: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
-        /* 🎬 Background Animation */
+        /* 🎬 Advanced Background Animation */
+        @keyframes breatheGlow {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        }
         .bg-glow {
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
             width: 500px;
             height: 500px;
             background: radial-gradient(circle, rgba(255, 153, 51, 0.15) 0%, transparent 70%);
             z-index: -1;
             filter: blur(50px);
+            animation: breatheGlow 6s ease-in-out infinite;
         }
 
         /* ✨ Welcome Animations */
         @keyframes zoomIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
+            from { opacity: 0; transform: scale(0.8) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); box-shadow: 0 25px 50px rgba(255, 153, 51, 0.4); }
+        }
+
+        @keyframes pulseBtn {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 153, 51, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 0 40px rgba(255, 153, 51, 0.8); transform: scale(1.02); }
         }
 
         .welcome-card {
             text-align: center;
-            animation: zoomIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: zoomIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .logo-float {
+            animation: float 4s ease-in-out infinite;
         }
 
         .btn-start {
@@ -60,14 +79,16 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             transition: 0.4s;
-            box-shadow: 0 10px 30px rgba(255, 153, 51, 0.4);
             cursor: pointer;
             border: none;
+            animation: pulseBtn 2.5s infinite;
         }
 
         .btn-start:hover {
+            background: linear-gradient(135deg, #ffa852, #e65c00);
+            animation: none;
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(255, 153, 51, 0.6);
+            box-shadow: 0 15px 40px rgba(255, 153, 51, 0.7);
         }
 
         /* 🚪 Selection Screen */
@@ -75,8 +96,14 @@
             display: none;
             width: 100%;
             max-width: 400px;
-            padding: 20px;
+            padding: 20px 0;
             text-align: center;
+        }
+
+        /* ✨ Staggered Slide-In Animation for Buttons */
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(40px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .vault-btn {
@@ -91,12 +118,14 @@
             transition: 0.3s;
             position: relative;
             overflow: hidden;
+            opacity: 0; /* Hidden initially for animation */
         }
 
         .vault-btn:hover {
             background: rgba(255, 153, 51, 0.1);
             border-color: var(--bhagwa);
-            transform: translateX(10px);
+            transform: translateX(10px) scale(1.02) !important;
+            box-shadow: -10px 10px 30px rgba(255, 153, 51, 0.2);
         }
 
         .vault-btn h3 {
@@ -105,6 +134,7 @@
             font-weight: 900;
             margin-bottom: 4px;
             text-transform: uppercase;
+            transition: 0.3s;
         }
 
         .vault-btn p {
@@ -118,10 +148,12 @@
             font-size: 2rem;
             margin-bottom: 10px;
             display: inline-block;
+            transition: 0.3s;
         }
-
-        .badge-admin { color: #f43f5e; }
-        .badge-customer { color: #10b981; }
+        
+        .vault-btn:hover .icon {
+            transform: scale(1.2) rotate(5deg);
+        }
 
     </style>
 </head>
@@ -130,7 +162,7 @@
     <div class="bg-glow"></div>
 
     <div id="welcomeScreen" class="welcome-card px-6">
-        <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" alt="Logo" class="w-32 h-32 mx-auto rounded-[40px] shadow-2xl mb-8 border-2 border-white/10">
+        <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" alt="Logo" class="logo-float w-32 h-32 mx-auto rounded-[40px] shadow-2xl mb-8 border-2 border-white/10">
         <h4 class="text-[#ff9933] font-black uppercase tracking-[5px] text-xs mb-3">Official Gateway</h4>
         <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-10 italic uppercase">
             Welcome to <br> <span class="text-[#ff9933]">Patel Traders</span>
@@ -139,24 +171,30 @@
     </div>
 
     <div id="selectionScreen" class="selection-card">
-        <div class="mb-10">
+        <div class="mb-10 opacity-0" id="selectionHeader">
             <h2 class="text-2xl font-black text-white italic uppercase mb-2">Select User Type</h2>
-            <div class="h-1 w-20 bg-[#ff9933] mx-auto rounded-full"></div>
+            <div class="h-1 w-20 bg-[#ff9933] mx-auto rounded-full shadow-[0_0_10px_#ff9933]"></div>
         </div>
 
-        <a href="https://sheelu955.github.io/Admin-Gateway/" class="vault-btn group">
+        <a href="https://sheelu955.github.io/Admin-Gateway/" class="vault-btn group anim-btn">
             <div class="icon">🔒</div>
             <h3 class="group-hover:text-[#ff9933]">Admin Vault</h3>
             <p class="uppercase tracking-widest">Management & Controls</p>
         </a>
 
-        <a href="https://sheelu955.github.io/Customer-Gateway/" class="vault-btn group">
+        <a href="https://sheelu955.github.io/Customer-Gateway/" class="vault-btn group anim-btn">
             <div class="icon">👤</div>
             <h3 class="group-hover:text-[#ff9933]">Customer Vault</h3>
             <p class="uppercase tracking-widest">Billing & Service History</p>
         </a>
 
-        <p class="mt-8 text-[10px] text-white/30 font-bold uppercase tracking-tighter">
+        <a href="https://sheelu955.github.io/About-Patel-Traders-/" class="vault-btn group anim-btn">
+            <div class="icon">🏢</div>
+            <h3 class="group-hover:text-[#ff9933]">About Us</h3>
+            <p class="uppercase tracking-widest">Contact & Store Info</p>
+        </a>
+
+        <p id="footerText" class="mt-8 text-[10px] text-white/30 font-bold uppercase tracking-tighter opacity-0">
             © 2026 Patel Traders Digitally Secured
         </p>
     </div>
@@ -165,24 +203,29 @@
         function showSelection() {
             const welcome = document.getElementById('welcomeScreen');
             const selection = document.getElementById('selectionScreen');
+            const header = document.getElementById('selectionHeader');
+            const footer = document.getElementById('footerText');
+            const btns = document.querySelectorAll('.anim-btn');
 
             // Fade out welcome
-            welcome.style.transition = "0.5s";
+            welcome.style.transition = "0.5s cubic-bezier(0.16, 1, 0.3, 1)";
             welcome.style.opacity = "0";
-            welcome.style.transform = "scale(0.9)";
+            welcome.style.transform = "scale(0.8) translateY(-30px)";
 
             setTimeout(() => {
                 welcome.style.display = "none";
                 selection.style.display = "block";
                 
-                // Fade in selection
-                selection.style.opacity = "0";
-                selection.style.transform = "translateY(20px)";
-                setTimeout(() => {
-                    selection.style.transition = "0.6s cubic-bezier(0.16, 1, 0.3, 1)";
-                    selection.style.opacity = "1";
-                    selection.style.transform = "translateY(0)";
-                }, 50);
+                // Fade in header & footer
+                header.style.animation = "slideUpFade 0.6s ease forwards";
+                footer.style.animation = "slideUpFade 0.6s ease forwards 0.6s";
+
+                // Staggered Animation for Buttons
+                btns.forEach((btn, index) => {
+                    // Each button waits slightly longer than the previous one (0.15s gap)
+                    btn.style.animation = `slideUpFade 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${0.2 + (index * 0.15)}s forwards`;
+                });
+                
             }, 500);
         }
     </script>
