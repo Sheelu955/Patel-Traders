@@ -3,270 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Patel Traders | ERP Master V4</title>
+    <title>Patel Traders | Official Gateway</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap');
-        :root { --bhagwa: #ff9933; --bg-dark: #080a0f; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: #ffffff; margin: 0; padding: 0; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 153, 51, 0.2); border-radius: 24px; }
-        .m-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 16px; width: 100%; color: white; outline: none; margin-bottom: 12px; box-sizing: border-box; }
-        .btn-bhagwa { background: linear-gradient(135deg, #ff9933, #cc5500); color: white; font-weight: 800; text-transform: uppercase; border-radius: 16px; padding: 18px; width: 100%; cursor: pointer; border: none; transition: 0.2s; box-shadow: 0 8px 15px rgba(255, 153, 51, 0.2); }
-        .app-view { display: none; min-height: 100vh; padding: 20px; flex-direction: column; align-items: center; justify-content: center; }
-        #receipt-render { width: 210mm; min-height: 297mm; background: white; color: #0f172a; padding: 18mm; border: 8px solid var(--bhagwa); position: relative; box-sizing: border-box; margin: 0 auto; }
-        .stamp { position: absolute; top: 12%; right: 10%; width: 150px; height: 150px; border: 6px solid; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 28px; transform: rotate(-20deg); opacity: 0.15; pointer-events: none; }
-        .active-tab { background: var(--bhagwa) !important; color: white !important; }
-        .admin-db-card { background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 12px; margin-bottom: 8px; border-left: 4px solid var(--bhagwa); }
+        
+        :root {
+            --bhagwa: #ff9933;
+            --bg-dark: #080a0f;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-dark);
+            color: #ffffff;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 🎬 Background Animation */
+        .bg-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 153, 51, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(50px);
+        }
+
+        /* ✨ Welcome Animations */
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .welcome-card {
+            text-align: center;
+            animation: zoomIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #ff9933, #cc5500);
+            color: white;
+            font-weight: 800;
+            padding: 20px 60px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.4s;
+            box-shadow: 0 10px 30px rgba(255, 153, 51, 0.4);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 153, 51, 0.6);
+        }
+
+        /* 🚪 Selection Screen */
+        .selection-card {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .vault-btn {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: block;
+            text-decoration: none;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vault-btn:hover {
+            background: rgba(255, 153, 51, 0.1);
+            border-color: var(--bhagwa);
+            transform: translateX(10px);
+        }
+
+        .vault-btn h3 {
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .vault-btn p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .vault-btn .icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .badge-admin { color: #f43f5e; }
+        .badge-customer { color: #10b981; }
+
     </style>
 </head>
 <body>
 
-<div id="view-home" class="app-view" style="display: flex;">
-    <div class="text-center p-10 glass w-full max-w-sm border-t-4 border-[#ff9933]">
-        <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-24 mx-auto mb-6 rounded-3xl border-2 border-[#ff9933]">
-        <h1 class="text-4xl font-black italic mb-1 uppercase tracking-tighter">Patel <span class="text-[#ff9933]">Traders</span></h1>
-        <h2 class="text-[#ff9933] text-[15px] font-black mb-1">फर्नीचर शॉप</h2>
-        <p class="text-white/40 text-[10px] mb-8 font-bold italic text-center">गांधीनगर, तालग्राम, कन्नौज, उत्तर प्रदेश - 209731</p>
-        <button onclick="window.adminGatewayInit()" class="btn-bhagwa mb-4">Admin Gateway</button>
-        <button onclick="window.showView('view-cust-gate')" class="w-full py-4 glass font-black uppercase text-xs tracking-widest text-[#ff9933]">Customer Vault</button>
-    </div>
-</div>
+    <div class="bg-glow"></div>
 
-<div id="view-admin-gate" class="app-view">
-    <div id="pinDots" class="flex gap-5 mb-10"><div class="w-4 h-4 rounded-full border-2 border-white/30"></div><div class="w-4 h-4 rounded-full border-2 border-white/30"></div><div class="w-4 h-4 rounded-full border-2 border-white/30"></div><div class="w-4 h-4 rounded-full border-2 border-white/30"></div></div>
-    <div class="grid grid-cols-3 gap-5 w-full max-w-xs">
-        <script>for(let i=1;i<=9;i++) document.write(`<button onclick="window.pressPin('${i}')" class="py-6 glass font-black text-2xl text-white rounded-2xl active:bg-[#ff9933]">${i}</button>`)</script>
-        <button onclick="window.clearP()" class="py-6 font-black text-rose-500">CLR</button>
-        <button onclick="window.pressPin('0')" class="py-6 glass font-black text-2xl text-white rounded-2xl active:bg-[#ff9933]">0</button>
-        <button onclick="window.showView('view-home')" class="py-6 font-black text-slate-500 text-[10px]">Back</button>
+    <div id="welcomeScreen" class="welcome-card px-6">
+        <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" alt="Logo" class="w-32 h-32 mx-auto rounded-[40px] shadow-2xl mb-8 border-2 border-white/10">
+        <h4 class="text-[#ff9933] font-black uppercase tracking-[5px] text-xs mb-3">Official Gateway</h4>
+        <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-10 italic uppercase">
+            Welcome to <br> <span class="text-[#ff9933]">Patel Traders</span>
+        </h1>
+        <button onclick="showSelection()" class="btn-start">Start Session →</button>
     </div>
-</div>
 
-<div id="view-admin-app" class="app-view" style="align-items: flex-start;">
-    <div class="w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 py-6">
-        <div class="w-full lg:w-1/3 p-6 glass border-t-4 border-[#ff9933]">
-            <h2 class="text-xl font-black mb-6 uppercase italic">Billing Hub</h2>
-            <div class="flex gap-2 mb-6 bg-black/40 p-1 rounded-xl">
-                <button onclick="window.setBillMode('PAID')" id="mP" class="w-1/2 py-3 rounded-lg font-black text-[10px] active-tab">PAID</button>
-                <button onclick="window.setBillMode('UNPAID')" id="mU" class="w-1/2 py-3 rounded-lg font-black text-[10px] text-white">UNPAID</button>
-            </div>
-            <div class="space-y-1">
-                <input type="text" id="inName" oninput="window.sync()" placeholder="Customer Name" class="m-input">
-                <input type="text" id="inPhone" oninput="window.sync()" placeholder="Mobile No" class="m-input">
-                <input type="text" id="inVehicle" oninput="window.sync()" placeholder="Vehicle No" class="m-input">
-                <input type="text" id="inItem" oninput="window.sync()" placeholder="Furniture Item" class="m-input">
-                <div class="flex gap-2"><input type="number" id="inAmt" oninput="window.sync()" placeholder="₹ Base" class="m-input w-1/2"><input type="number" id="inDisc" oninput="window.sync()" placeholder="₹ Disc" class="m-input w-1/2"></div>
-                <select id="inWarranty" onchange="window.sync()" class="m-input"><option>No Warranty</option><option>1 Year</option><option>5 Years</option></select>
-                <textarea id="inDetail" oninput="window.sync()" placeholder="Extra Details..." class="m-input h-16"></textarea>
-                <input type="text" id="inPostDate" oninput="window.sync()" placeholder="Due Date (DD/MM/YYYY)" class="m-input" style="display:none">
-            </div>
-            <button onclick="window.saveBillMaster()" class="btn-bhagwa mt-4">Save & Print Bill</button>
-            <div class="mt-8 border-t border-white/10 pt-6">
-                <h3 class="text-xs font-black uppercase text-[#ff9933] mb-4">☁️ Cloud Database</h3>
-                <div class="grid grid-cols-2 gap-2 mb-4">
-                    <button onclick="window.fetchAdminCloud('PAID')" class="py-3 bg-emerald-500/20 text-emerald-500 rounded-xl font-bold text-[10px] uppercase">Paid History</button>
-                    <button onclick="window.fetchAdminCloud('UNPAID')" class="py-3 bg-rose-500/20 text-rose-500 rounded-xl font-bold text-[10px] uppercase">Unpaid Dues</button>
-                </div>
-                <div id="adminCloudList" class="max-h-[250px] overflow-y-auto space-y-2"></div>
-            </div>
-            <button onclick="window.showView('view-home')" class="w-full py-2 text-slate-500 uppercase mt-4 text-[9px]">Logout Admin</button>
+    <div id="selectionScreen" class="selection-card">
+        <div class="mb-10">
+            <h2 class="text-2xl font-black text-white italic uppercase mb-2">Select User Type</h2>
+            <div class="h-1 w-20 bg-[#ff9933] mx-auto rounded-full"></div>
         </div>
 
-        <div class="w-full lg:w-2/3 bg-slate-900/50 p-6 rounded-[40px]">
-            <div id="receipt-render">
-                <div id="stP" class="stamp" style="color: #10b981; border-color: #10b981;">PAID</div><div id="stU" class="stamp" style="display:none; color: #ef4444; border-color: #ef4444;">PENDING</div>
-                <div class="flex justify-between border-b-2 pb-6 border-slate-100">
-                    <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-24 rounded-2xl">
-                    <div class="text-right">
-                        <h1 class="text-4xl font-black uppercase text-slate-900">Patel Traders</h1>
-                        <p class="text-[11px] font-black text-slate-800">गांधीनगर, तालग्राम, कन्नौज, उत्तर प्रदेश - 209731</p>
-                        <p class="text-[11px] font-black text-slate-500 italic">संजय कुमार: +91 9565697314</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 my-10 font-bold uppercase text-slate-800">
-                    <div><p class="text-slate-400 text-[10px]">Customer</p><h3 id="vName" class="text-3xl font-black italic">Guest</h3><p id="vPhone" class="text-slate-500">+91 0000000000</p><p class="mt-2 text-[10px]">Vehicle: <span id="vVehicle">--</span></p></div>
-                    <div class="text-right text-[12px]">INV: <span id="vInv">#AUTO</span><br>DATE: <span id="vDate">--</span><br>WAR: <span id="vWar">None</span></div>
-                </div>
-                <div class="min-h-[220px] border-y-2 py-8 font-black uppercase text-slate-800 border-slate-100 text-2xl italic">
-                    <table class="w-full"><tr><td><span id="vItem">Item</span><br><small id="vDetail" class="text-xs normal-case text-slate-400 font-bold"></small></td><td id="vBase" class="text-right">₹ 0</td></tr></table>
-                </div>
-                <div class="mt-10 p-8 bg-slate-50 rounded-[40px] flex justify-between items-center border border-slate-100">
-                    <div><p class="text-[11px] text-slate-400 font-black">PAYABLE AMOUNT</p><h2 id="vTotal" class="text-6xl font-black text-slate-900">₹ 0</h2></div>
-                    <div class="text-right"><p id="vPostDisplay" class="text-rose-600 font-black text-sm"></p></div>
-                </div>
-            </div>
-        </div>
+        <a href="https://sheelu955.github.io/Admin-Gateway/" class="vault-btn group">
+            <div class="icon">🔒</div>
+            <h3 class="group-hover:text-[#ff9933]">Admin Vault</h3>
+            <p class="uppercase tracking-widest">Management & Controls</p>
+        </a>
+
+        <a href="https://sheelu955.github.io/Customer-Gateway/" class="vault-btn group">
+            <div class="icon">👤</div>
+            <h3 class="group-hover:text-[#ff9933]">Customer Vault</h3>
+            <p class="uppercase tracking-widest">Billing & Service History</p>
+        </a>
+
+        <p class="mt-8 text-[10px] text-white/30 font-bold uppercase tracking-tighter">
+            © 2026 Patel Traders Digitally Secured
+        </p>
     </div>
-</div>
 
-<div id="view-cust-gate" class="app-view">
-    <div class="glass p-8 w-full max-w-sm border-b-4 border-[#ff9933]">
-        <h2 class="text-2xl font-black text-white text-center mb-8 uppercase italic">Vault Access</h2>
-        <div id="authTabs" class="flex gap-2 mb-6 bg-black/40 p-1 rounded-xl">
-            <button id="tL" onclick="window.toggleAuth('login')" class="flex-1 py-3 rounded-lg font-black uppercase text-[10px] active-tab">Login</button>
-            <button id="tR" onclick="window.toggleAuth('reg')" class="flex-1 py-3 rounded-lg font-black uppercase text-[10px] text-slate-400">Register</button>
-        </div>
-        <div id="boxL"><input type="text" id="lU" placeholder="Username" class="m-input"><input type="password" id="lP" placeholder="Password" class="m-input"><button onclick="window.handleLogin()" class="btn-bhagwa mt-2">Unlock Vault</button></div>
-        <div id="boxR" style="display: none;"><input type="text" id="rN" placeholder="Full Name" class="m-input"><input type="text" id="rPh" placeholder="Mobile No" class="m-input"><input type="text" id="rU" placeholder="Set Username" class="m-input"><input type="password" id="rP" placeholder="Set Password" class="m-input"><button onclick="window.handleReg()" class="btn-bhagwa mt-2">Create Vault ID</button></div>
-        <button onclick="window.showView('view-home')" class="w-full text-slate-600 text-[10px] mt-8 uppercase border-t border-white/5 pt-4">← Exit</button>
-    </div>
-</div>
+    <script>
+        function showSelection() {
+            const welcome = document.getElementById('welcomeScreen');
+            const selection = document.getElementById('selectionScreen');
 
-<div id="view-cust-app" class="app-view" style="justify-content: flex-start;">
-    <div class="w-full max-w-5xl mx-auto py-6">
-        <div class="flex justify-between items-center glass p-10 border-l-8 border-[#ff9933] mb-8">
-            <div>
-                <h2 class="text-4xl font-black uppercase">My <span class="text-[#ff9933]">Vault</span></h2>
-                <p id="cNameDisplay" class="text-xs text-[#ff9933] font-bold">Verified Owner</p>
-                <p id="cIDDisplay" class="text-[9px] text-white/40 mt-1 uppercase tracking-widest italic">Vault ID: PT-V-000000</p>
-            </div>
-            <button onclick="location.reload()" class="px-8 py-3 bg-rose-600 text-white font-black rounded-xl text-xs uppercase">Logout</button>
-        </div>
-        <div class="glass p-6 mb-6 border-l-4 border-emerald-500 bg-emerald-500/5">
-            <h3 class="text-emerald-400 font-black text-[11px] mb-4 uppercase">🔍 Find Missing Receipt</h3>
-            <div class="flex flex-col md:flex-row gap-3"><input type="text" id="linkInvInput" placeholder="Invoice No" class="m-input m-0 flex-1"><input type="text" id="linkDateInput" placeholder="Date (DD/MM/YYYY)" class="m-input m-0 flex-1"><button onclick="window.linkAndOpenReceipt()" class="btn-bhagwa px-8 py-3 m-0 text-xs">Search</button></div>
-        </div>
-        <div id="uGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"></div>
-        <div id="pGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6 pb-20"></div>
-    </div>
-</div>
+            // Fade out welcome
+            welcome.style.transition = "0.5s";
+            welcome.style.opacity = "0";
+            welcome.style.transform = "scale(0.9)";
 
-<script>
-    const CONFIG = { URL: "https://script.google.com/macros/s/AKfycbyqGgozh6soglW6b_8s7LSr96_gIGNaweAnG1CQn-_F5HytVi9pYGi3GDX-lSz-mEyD/exec", ID: "1895656973148", PIN: "7314" };
-    window.pCode = ""; window.bMode = "PAID"; window.dbRecs = []; window.activeU = null;
+            setTimeout(() => {
+                welcome.style.display = "none";
+                selection.style.display = "block";
+                
+                // Fade in selection
+                selection.style.opacity = "0";
+                selection.style.transform = "translateY(20px)";
+                setTimeout(() => {
+                    selection.style.transition = "0.6s cubic-bezier(0.16, 1, 0.3, 1)";
+                    selection.style.opacity = "1";
+                    selection.style.transform = "translateY(0)";
+                }, 50);
+            }, 500);
+        }
+    </script>
 
-    window.showView = (vId) => { document.querySelectorAll('.app-view').forEach(v => v.style.display = 'none'); document.getElementById(vId).style.display = 'flex'; };
-
-    window.adminGatewayInit = () => { if (prompt("Admin ID:") === CONFIG.ID) window.showView('view-admin-gate'); };
-
-    window.pressPin = (n) => {
-        if (window.pCode.length < 4) window.pCode += n;
-        document.querySelectorAll('#pinDots div').forEach((x, i) => x.style.background = i < window.pCode.length ? '#ff9933' : 'transparent');
-        if (window.pCode === CONFIG.PIN) { window.showView('view-admin-app'); window.sync(); window.pCode = ""; }
-    };
-
-    window.clearP = () => { window.pCode = ""; document.querySelectorAll('#pinDots div').forEach(x => x.style.background = 'transparent'); };
-
-    window.toggleAuth = (t) => {
-        document.getElementById('boxL').style.display = t === 'login' ? 'block' : 'none';
-        document.getElementById('boxR').style.display = t === 'reg' ? 'block' : 'none';
-        document.getElementById('tL').className = t === 'login' ? 'flex-1 py-3 rounded-lg font-black active-tab' : 'flex-1 py-3 rounded-lg font-black text-slate-400';
-        document.getElementById('tR').className = t === 'reg' ? 'flex-1 py-3 rounded-lg font-black active-tab' : 'flex-1 py-3 rounded-lg font-black text-slate-400';
-    };
-
-    window.handleLogin = async () => {
-        const u = document.getElementById('lU').value.trim(), p = document.getElementById('lP').value.trim();
-        const res = await fetch(`${CONFIG.URL}?action=getUsers`);
-        const users = await res.json();
-        const found = users.find(x => String(x.user) === u && String(x.pass) === p);
-        if (found) { 
-            window.activeU = found; 
-            document.getElementById('cNameDisplay').innerText = found.name; 
-            document.getElementById('cIDDisplay').innerText = "Vault ID: " + (found.custid || "PT-V-USER");
-            window.showView('view-cust-app'); window.loadVault(); 
-        } else alert("Error!");
-    };
-
-    // 🆔 RESTORED: REGISTRATION ID FUNCTION
-    window.handleReg = async () => {
-        const custid = "PT-V-" + Math.floor(100000 + Math.random() * 900000); // Unique 6-digit ID
-        const d = { 
-            type: "USER", 
-            custid: custid, 
-            name: document.getElementById('rN').value, 
-            phone: document.getElementById('rPh').value, 
-            user: document.getElementById('rU').value, 
-            pass: document.getElementById('rP').value 
-        };
-        await fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
-        alert("Account Created! Your ID: " + custid); 
-        window.toggleAuth('login');
-    };
-
-    window.setBillMode = (m) => {
-        window.bMode = m;
-        document.getElementById('mP').className = m === 'PAID' ? 'w-1/2 py-3 rounded-lg font-black active-tab' : 'w-1/2 py-3 rounded-lg font-black text-white';
-        document.getElementById('mU').className = m === 'UNPAID' ? 'w-1/2 py-3 rounded-lg font-black active-tab' : 'w-1/2 py-3 rounded-lg font-black text-white';
-        document.getElementById('stP').style.display = m === 'PAID' ? 'flex' : 'none';
-        document.getElementById('stU').style.display = m === 'UNPAID' ? 'flex' : 'none';
-        document.getElementById('inPostDate').style.display = m === 'UNPAID' ? 'block' : 'none';
-        window.sync();
-    };
-
-    window.sync = () => {
-        const a = parseFloat(document.getElementById('inAmt').value) || 0, d = parseFloat(document.getElementById('inDisc').value) || 0;
-        document.getElementById('vName').innerText = document.getElementById('inName').value || "Guest";
-        document.getElementById('vPhone').innerText = document.getElementById('inPhone').value || "0000000000";
-        document.getElementById('vVehicle').innerText = document.getElementById('inVehicle').value || "--";
-        document.getElementById('vItem').innerText = document.getElementById('inItem').value || "Item";
-        document.getElementById('vTotal').innerText = "₹ " + (a - d).toLocaleString();
-        document.getElementById('vBase').innerText = "₹ " + a.toLocaleString();
-        document.getElementById('vWar').innerText = document.getElementById('inWarranty').value;
-        document.getElementById('vPostDisplay').innerText = window.bMode === 'UNPAID' ? "DUE: " + document.getElementById('inPostDate').value : "";
-        document.getElementById('vDate').innerText = new Date().toLocaleDateString('en-GB');
-    };
-
-    window.saveBillMaster = async () => {
-        const inv = "PT-B-" + Date.now().toString().slice(-6);
-        const d = { type: "BILL", inv, name: document.getElementById('inName').value, phone: document.getElementById('inPhone').value, vehicle: document.getElementById('inVehicle').value, item: document.getElementById('inItem').value, total: document.getElementById('vTotal').innerText, date: document.getElementById('vDate').innerText, mode: window.bMode, warranty: document.getElementById('inWarranty').value, detail: document.getElementById('inDetail').value, postdate: document.getElementById('inPostDate').value };
-        await fetch(CONFIG.URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(d) });
-        const canvas = await html2canvas(document.getElementById('receipt-render'), {scale: 2, useCORS: true});
-        const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
-        pdf.save(inv + ".pdf");
-    };
-
-    window.fetchAdminCloud = async (mode) => {
-        const list = document.getElementById('adminCloudList');
-        list.innerHTML = `<p class="italic opacity-30 text-center">Reading Cloud...</p>`;
-        const res = await fetch(`${CONFIG.URL}?action=getBills`);
-        window.dbRecs = await res.json();
-        const filtered = window.dbRecs.filter(r => r.mode === mode).reverse();
-        list.innerHTML = filtered.map(r => `<div class="admin-db-card flex justify-between items-center"><div><b>${r.name}</b><br><small>${r.date} | ${r.total}</small></div><button onclick="window.handleSilentPDF(${window.dbRecs.indexOf(r)}, 'view-admin-app')" class="px-2 py-1 glass text-[10px] text-[#ff9933]">PDF</button></div>`).join('') || "No Records";
-    };
-
-    window.loadVault = async () => {
-        const res = await fetch(`${CONFIG.URL}?action=getBills`);
-        window.dbRecs = await res.json();
-        const ph = String(window.activeU.phone).slice(-10);
-        const mine = window.dbRecs.filter(r => String(r.phone).includes(ph));
-        document.getElementById('pGrid').innerHTML = mine.filter(x=>x.mode==='PAID').map(r => `<div class='glass p-6'><h3>${r.item}</h3><p>${r.total}</p><button onclick="window.handleSilentPDF(${window.dbRecs.indexOf(r)}, 'view-cust-app')" class='btn-bhagwa py-2 mt-4 text-xs'>PDF</button></div>`).join('') || "No Bills";
-        document.getElementById('uGrid').innerHTML = mine.filter(x=>x.mode!=='PAID').map(r => `<div class='glass p-6'><h3>${r.item}</h3><p>${r.total}</p></div>`).join('') || "No Dues";
-    };
-
-    window.linkAndOpenReceipt = async () => {
-        const inv = document.getElementById('linkInvInput').value.trim().toUpperCase();
-        const dt = document.getElementById('linkDateInput').value.trim();
-        const foundIdx = window.dbRecs.findIndex(r => String(r.inv).toUpperCase() === inv && String(r.date) === dt);
-        if(foundIdx !== -1) window.handleSilentPDF(foundIdx, 'view-cust-app'); else alert("Not Found!");
-    };
-
-    window.handleSilentPDF = async function(idx, ret) {
-        const r = window.dbRecs[idx];
-        const v = document.getElementById('view-admin-app');
-        v.style.display = 'flex'; v.style.opacity = '0.01'; v.style.position = 'fixed';
-        document.getElementById('vName').innerText = r.name;
-        document.getElementById('vPhone').innerText = r.phone;
-        document.getElementById('vVehicle').innerText = r.vehicle || "--";
-        document.getElementById('vInv').innerText = r.inv;
-        document.getElementById('vTotal').innerText = r.total;
-        document.getElementById('vItem').innerText = r.item;
-        document.getElementById('vDetail').innerText = r.detail || "";
-        document.getElementById('vWar').innerText = r.warranty || "None";
-        document.getElementById('vDate').innerText = r.date;
-        document.getElementById('stP').style.display = r.mode === 'PAID' ? 'flex' : 'none';
-        document.getElementById('stU').style.display = r.mode !== 'PAID' ? 'flex' : 'none';
-        setTimeout(async () => {
-            const canvas = await html2canvas(document.getElementById('receipt-render'), { scale: 2, useCORS: true });
-            const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
-            pdf.save(r.inv + "_" + r.name + ".pdf");
-            v.style.display = 'none'; v.style.opacity = '1'; v.style.position = 'relative';
-            window.showView(ret);
-        }, 1200);
-    };
-</script>
 </body>
 </html>
