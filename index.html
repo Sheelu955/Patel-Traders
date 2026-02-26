@@ -3,232 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Patel Traders | Official Gateway</title>
+    <title>Patel Traders | India's Unified Gateway</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
         
         :root {
-            --bhagwa: #ff9933;
-            --bg-dark: #080a0f;
+            --saffron-soft: #fff9f2;
+            --saffron-main: #ff9933;
+            --saffron-deep: #e67e22;
+            --text-main: #1a1a1a;
         }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg-dark);
-            color: #ffffff;
+            background: radial-gradient(circle at top right, #ffffff, var(--saffron-soft));
+            color: var(--text-main);
             margin: 0;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
         }
 
-        /* 🎬 Advanced Background Animation */
-        @keyframes breatheGlow {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-        }
-        .bg-glow {
+        /* ☸️ Ashoka Chakra Watermark (Rotating) */
+        .chakra-bg {
             position: fixed;
             top: 50%;
             left: 50%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255, 153, 51, 0.15) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            width: 85vh;
+            height: 85vh;
+            opacity: 0.03;
             z-index: -1;
-            filter: blur(50px);
-            animation: breatheGlow 6s ease-in-out infinite;
+            pointer-events: none;
+            animation: rotateChakra 80s linear infinite;
         }
 
-        /* ✨ Welcome Animations */
-        @keyframes zoomIn {
-            from { opacity: 0; transform: scale(0.8) translateY(30px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); box-shadow: 0 25px 50px rgba(255, 153, 51, 0.4); }
+        @keyframes rotateChakra {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        @keyframes pulseBtn {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 153, 51, 0.4); transform: scale(1); }
-            50% { box-shadow: 0 0 40px rgba(255, 153, 51, 0.8); transform: scale(1.02); }
-        }
+        /* ✨ Premium Reveal Animation */
+        .reveal { opacity: 0; transform: translateY(20px); animation: revealUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
+        @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
 
-        .welcome-card {
-            text-align: center;
-            animation: zoomIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        .logo-float {
-            animation: float 4s ease-in-out infinite;
-        }
-
-        .btn-start {
-            background: linear-gradient(135deg, #ff9933, #cc5500);
-            color: white;
-            font-weight: 800;
-            padding: 20px 60px;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: 0.4s;
-            cursor: pointer;
-            border: none;
-            animation: pulseBtn 2.5s infinite;
-        }
-
-        .btn-start:hover {
-            background: linear-gradient(135deg, #ffa852, #e65c00);
-            animation: none;
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(255, 153, 51, 0.7);
-        }
-
-        /* 🚪 Selection Screen */
-        .selection-card {
-            display: none;
-            width: 100%;
-            max-width: 400px;
-            padding: 20px 0;
-            text-align: center;
-        }
-
-        /* ✨ Staggered Slide-In Animation for Buttons */
-        @keyframes slideUpFade {
-            from { opacity: 0; transform: translateY(40px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
+        /* 💎 Elite Vault Buttons (2x2 Grid Friendly) */
         .vault-btn {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 25px;
-            margin-bottom: 20px;
-            display: block;
-            text-decoration: none;
-            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 153, 51, 0.15);
+            border-radius: 30px;
+            padding: 24px;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 165px;
+            cursor: pointer;
             position: relative;
-            overflow: hidden;
-            opacity: 0; /* Hidden initially for animation */
+            z-index: 10;
         }
 
         .vault-btn:hover {
-            background: rgba(255, 153, 51, 0.1);
-            border-color: var(--bhagwa);
-            transform: translateX(10px) scale(1.02) !important;
-            box-shadow: -10px 10px 30px rgba(255, 153, 51, 0.2);
+            background: #ffffff;
+            border-color: var(--saffron-main);
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(255, 153, 51, 0.15);
         }
 
-        .vault-btn h3 {
-            color: white;
-            font-size: 1.4rem;
-            font-weight: 900;
-            margin-bottom: 4px;
+        /* 🟠 Start Button Style */
+        .btn-start {
+            background: linear-gradient(135deg, var(--saffron-main), var(--saffron-deep));
+            color: #ffffff;
+            font-weight: 700;
+            padding: 22px 70px;
+            border-radius: 100px;
             text-transform: uppercase;
-            transition: 0.3s;
+            letter-spacing: 4px;
+            transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(255, 153, 51, 0.3);
+            position: relative;
+            z-index: 20;
         }
 
-        .vault-btn p {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 1px;
+        /* 🚨 Disclaimer Modal (Security Guard) */
+        #disclaimerModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
         }
 
-        .vault-btn .icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            display: inline-block;
-            transition: 0.3s;
-        }
-        
-        .vault-btn:hover .icon {
-            transform: scale(1.2) rotate(5deg);
+        .modal-content {
+            background: white;
+            max-width: 500px;
+            width: 100%;
+            border-radius: 35px;
+            padding: 40px;
+            text-align: center;
+            border: 2px solid var(--saffron-main);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            animation: modalIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.8) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .btn-modal-back { border: 2px solid #ddd; color: #666; padding: 12px 20px; border-radius: 50px; font-weight: 700; font-size: 11px; text-transform: uppercase; transition: 0.3s; }
+        .btn-modal-back:hover { background: #f5f5f5; color: #1a1a1a; }
+
+        .btn-modal-continue { background: var(--saffron-main); color: white; padding: 12px 20px; border-radius: 50px; font-weight: 700; font-size: 11px; text-transform: uppercase; transition: 0.3s; box-shadow: 0 5px 15px rgba(255, 153, 51, 0.3); }
+        .btn-modal-continue:hover { background: var(--saffron-deep); transform: scale(1.05); }
+
+        .icon-box { transition: 0.4s ease; pointer-events: none; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+    <svg class="chakra-bg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-width="0.3"/>
+        <circle cx="50" cy="50" r="8" fill="none" stroke="currentColor" stroke-width="0.3"/>
+        <script>
+            for(let i=0; i<24; i++) {
+                const angle = i * 15 * Math.PI / 180;
+                document.write(`<line x1="50" y1="50" x2="${50 + 40 * Math.cos(angle)}" y2="${50 + 40 * Math.sin(angle)}" stroke="currentColor" stroke-width="0.3" />`);
+            }
+        </script>
+    </svg>
 
-    <div id="welcomeScreen" class="welcome-card px-6">
-        <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" alt="Logo" class="logo-float w-32 h-32 mx-auto rounded-[40px] shadow-2xl mb-8 border-2 border-white/10">
-        <h4 class="text-[#ff9933] font-black uppercase tracking-[5px] text-xs mb-3">Official Gateway</h4>
-        <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-10 italic uppercase">
-            Welcome to <br> <span class="text-[#ff9933]">Patel Traders</span>
+    <div id="welcomeScreen" class="text-center px-6 relative z-10">
+        <div class="mb-10 relative inline-block">
+            <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-32 h-32 mx-auto rounded-[40px] shadow-2xl relative z-10" style="animation: float 6s ease-in-out infinite;">
+            <div class="absolute inset-0 bg-orange-400/30 blur-[60px] rounded-full pointer-events-none"></div>
+        </div>
+        
+        <h1 class="text-5xl md:text-8xl font-black text-[#1a1a1a] italic uppercase leading-[1] mb-6 tracking-tighter">
+            <div class="reveal"><span>Welcome To</span></div>
+            <div class="reveal text-orange-500"><span style="animation-delay: 0.2s;">Patel Traders</span></div>
         </h1>
-        <button onclick="showSelection()" class="btn-start">Start Session →</button>
+
+        <p class="text-[11px] md:text-sm font-bold text-orange-700/80 uppercase tracking-[4px] mb-14 reveal" style="animation-delay: 0.3s;">
+            Unified Gateway For All Your Needs
+        </p>
+
+        <button onclick="showSelection()" class="btn-start reveal" style="animation-delay: 0.5s;">Get Started →</button>
+        
+        <div class="mt-20 reveal flex items-center justify-center gap-3 opacity-60" style="animation-delay: 0.7s;">
+            <div class="h-[1px] w-8 bg-orange-400"></div>
+            <span class="text-[10px] font-extrabold tracking-[5px] uppercase">🇮🇳 Made In India Products</span>
+            <div class="h-[1px] w-8 bg-orange-400"></div>
+        </div>
     </div>
 
-    <div id="selectionScreen" class="selection-card">
-        <div class="mb-10 opacity-0" id="selectionHeader">
-            <h2 class="text-2xl font-black text-white italic uppercase mb-2">Select User Type</h2>
-            <div class="h-1 w-20 bg-[#ff9933] mx-auto rounded-full shadow-[0_0_10px_#ff9933]"></div>
+    <div id="selectionScreen" class="hidden w-full max-w-[550px] px-6 text-center relative z-10">
+        <div id="selHeader" class="mb-12 opacity-0">
+            <h3 class="text-3xl font-black text-[#1a1a1a] italic uppercase tracking-tight">Main Dashboard</h3>
+            <div class="h-[3px] w-12 bg-orange-500 mx-auto mt-4 rounded-full"></div>
         </div>
 
-        <a href="https://sheelu955.github.io/Admin-Gateway/" class="vault-btn group anim-btn">
-            <div class="icon">🔒</div>
-            <h3 class="group-hover:text-[#ff9933]">Admin Vault</h3>
-            <p class="uppercase tracking-widest">Management & Controls</p>
-        </a>
+        <div class="grid grid-cols-2 gap-5">
+            <div onclick="openModal('admin')" class="vault-btn anim-btn">
+                <img src="https://i.ibb.co/JwnkKFyV/business-user-shield-78370-7029.webp" class="w-16 h-16 mb-4 icon-box">
+                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">Admin Vault</h3>
+                <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Management</p>
+            </div>
 
-        <a href="https://sheelu955.github.io/Customer-Gateway/" class="vault-btn group anim-btn">
-            <div class="icon">👤</div>
-            <h3 class="group-hover:text-[#ff9933]">Customer Vault</h3>
-            <p class="uppercase tracking-widest">Billing & Service History</p>
-        </a>
+            <div onclick="openModal('cms')" class="vault-btn anim-btn" style="border-color: rgba(255, 153, 51, 0.4); background: rgba(255, 153, 51, 0.05);">
+                <div class="text-4xl mb-4 icon-box">📢</div>
+                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">CMS Portal</h3>
+                <p class="text-orange-600 font-black text-[7px] mt-1 italic uppercase tracking-[1px]">Complaints Help</p>
+            </div>
 
-        <a href="https://sheelu955.github.io/About-Patel-Traders-/" class="vault-btn group anim-btn">
-            <div class="icon">🏢</div>
-            <h3 class="group-hover:text-[#ff9933]">About Us</h3>
-            <p class="uppercase tracking-widest">Contact & Store Info</p>
-        </a>
+            <div onclick="openModal('customer')" class="vault-btn anim-btn">
+                <div class="text-4xl mb-4 icon-box">👤</div>
+                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">User Vault</h3>
+                <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Dashboard</p>
+            </div>
 
-        <p id="footerText" class="mt-8 text-[10px] text-white/30 font-bold uppercase tracking-tighter opacity-0">
-            © 2026 Patel Traders Digitally Secured
-        </p>
+            <a href="https://sheelu955.github.io/About-Patel-Traders-/" class="vault-btn anim-btn">
+                <div class="text-4xl mb-4 icon-box">🏢</div>
+                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">About Us</h3>
+                <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Contact Info</p>
+            </a>
+        </div>
+
+        <div id="footer" class="mt-16 opacity-0">
+            <div class="bg-orange-50/50 border-y border-orange-100 py-6 px-4 rounded-xl">
+                <span class="text-[14px] font-black text-orange-700 tracking-[3px] uppercase">Made In India Products</span>
+                <p class="text-[11px] text-gray-500 font-bold uppercase tracking-[2px]">"एक बहुत अच्छा भारतीय प्रोडक्ट"</p>
+            </div>
+            <p class="text-[9px] text-gray-400 font-bold mt-8 tracking-[5px] uppercase italic">© 2026 Patel Traders • Secure & Encrypted</p>
+        </div>
+    </div>
+
+    <div id="disclaimerModal">
+        <div class="modal-content">
+            <div id="modalIcon" class="text-4xl mb-4">⚠️</div>
+            <h2 id="modalTitle" class="text-xl font-black text-orange-700 uppercase tracking-widest mb-4">सूचना</h2>
+            <p id="modalText" class="text-sm text-gray-600 leading-relaxed font-bold mb-8"></p>
+            <div class="flex flex-col gap-3">
+                <button id="continueBtn" class="btn-modal-continue">Continue Anyway</button>
+                <button onclick="closeModal()" class="btn-modal-back">Back to Master Portal</button>
+            </div>
+        </div>
     </div>
 
     <script>
+        let targetURL = "";
+
         function showSelection() {
             const welcome = document.getElementById('welcomeScreen');
             const selection = document.getElementById('selectionScreen');
-            const header = document.getElementById('selectionHeader');
-            const footer = document.getElementById('footerText');
-            const btns = document.querySelectorAll('.anim-btn');
-
-            // Fade out welcome
-            welcome.style.transition = "0.5s cubic-bezier(0.16, 1, 0.3, 1)";
+            welcome.style.transition = "all 0.8s cubic-bezier(0.19, 1, 0.22, 1)";
             welcome.style.opacity = "0";
-            welcome.style.transform = "scale(0.8) translateY(-30px)";
+            welcome.style.transform = "scale(0.96) translateY(-20px)";
+            welcome.style.pointerEvents = "none";
 
             setTimeout(() => {
                 welcome.style.display = "none";
-                selection.style.display = "block";
-                
-                // Fade in header & footer
-                header.style.animation = "slideUpFade 0.6s ease forwards";
-                footer.style.animation = "slideUpFade 0.6s ease forwards 0.6s";
-
-                // Staggered Animation for Buttons
-                btns.forEach((btn, index) => {
-                    // Each button waits slightly longer than the previous one (0.15s gap)
-                    btn.style.animation = `slideUpFade 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) ${0.2 + (index * 0.15)}s forwards`;
+                selection.classList.remove('hidden');
+                document.getElementById('selHeader').style.animation = "revealUp 1s forwards";
+                document.getElementById('footer').style.animation = "revealUp 1s 0.8s forwards";
+                document.querySelectorAll('.anim-btn').forEach((btn, index) => {
+                    btn.style.animation = `revealUp 0.8s forwards ${0.2 + (index * 0.1)}s`;
                 });
-                
-            }, 500);
+            }, 600);
         }
-    </script>
 
+        function openModal(type) {
+            const modal = document.getElementById('disclaimerModal');
+            const text = document.getElementById('modalText');
+            const title = document.getElementById('modalTitle');
+            const btn = document.getElementById('continueBtn');
+
+            if(type === 'admin') {
+                title.innerText = "ADMIN SECURITY ALERT";
+                text.innerText = "This is the portal especially designed for admins/owners of Patel Traders. Please do not login if you are a customer. If you login, that will be considered as an illegal practice and found to be guilty. Please login to the Customer Gateway if you are a customer or continue anyway.";
+                targetURL = "https://sheelu955.github.io/Admin-Gateway/";
+            } else if(type === 'cms') {
+                title.innerText = "CMS PORTAL DISCLAIMER";
+                text.innerText = "This is the portal especially designed to handle the customer complaints and the request approval from the admin. If you are a customer please login to customer CMS portal only. If you login to admin portal that will be considered as illegal practice and you will be filed a case.";
+                targetURL = "https://sheelu955.github.io/CMS-COMPLAINT-MANAGEMENT-SYSTEM/";
+            } else {
+                title.innerText = "CUSTOMER DISCLAIMER";
+                text.innerText = "This is the portal especially designed for the customers of Patel Traders. It is only valid for customers. Please login if you are an admin.";
+                targetURL = "https://sheelu955.github.io/Customer-Gateway/";
+            }
+            
+            btn.onclick = () => window.location.href = targetURL;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('disclaimerModal').style.display = 'none'; }
+    </script>
 </body>
 </html>
