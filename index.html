@@ -28,7 +28,7 @@
             justify-content: center;
         }
 
-        /* ☸️ Ashoka Chakra Watermark (Rotating) */
+        /* ☸️ Rotating Ashoka Chakra */
         .chakra-bg {
             position: fixed;
             top: 50%;
@@ -47,11 +47,11 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        /* ✨ Premium Reveal Animation */
+        /* ✨ Reveal Animation */
         .reveal { opacity: 0; transform: translateY(20px); animation: revealUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
         @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* 💎 Elite Vault Buttons (2x2 Grid Friendly) */
+        /* 💎 Elite Buttons (2x2 Grid) */
         .vault-btn {
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(20px);
@@ -76,7 +76,7 @@
             box-shadow: 0 25px 50px rgba(255, 153, 51, 0.15);
         }
 
-        /* 🟠 Start Button Style */
+        /* 🟠 Start Button */
         .btn-start {
             background: linear-gradient(135deg, var(--saffron-main), var(--saffron-deep));
             color: #ffffff;
@@ -93,7 +93,7 @@
             z-index: 20;
         }
 
-        /* 🚨 Disclaimer Modal (Security Guard) */
+        /* 🚨 Disclaimer Modal (Security Gate) */
         #disclaimerModal {
             position: fixed;
             inset: 0;
@@ -207,14 +207,15 @@
                 <span class="text-[14px] font-black text-orange-700 tracking-[3px] uppercase">Made In India Products</span>
                 <p class="text-[11px] text-gray-500 font-bold uppercase tracking-[2px]">"एक बहुत अच्छा भारतीय प्रोडक्ट"</p>
             </div>
-            <p class="text-[9px] text-gray-400 font-bold mt-8 tracking-[5px] uppercase italic">© 2026 Patel Traders • Secure & Encrypted</p>
         </div>
     </div>
 
     <div id="disclaimerModal">
         <div class="modal-content">
             <div id="modalIcon" class="text-4xl mb-4">⚠️</div>
-            <h2 id="modalTitle" class="text-xl font-black text-orange-700 uppercase tracking-widest mb-4">सूचना</h2>
+            <h2 id="modalTitle" class="text-xl font-black text-orange-700 uppercase tracking-widest mb-1">DISCLAIMER</h2>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[3px] mb-6">Read And Understand</p>
+            
             <p id="modalText" class="text-sm text-gray-600 leading-relaxed font-bold mb-8"></p>
             <div class="flex flex-col gap-3">
                 <button id="continueBtn" class="btn-modal-continue">Continue Anyway</button>
@@ -232,8 +233,6 @@
             welcome.style.transition = "all 0.8s cubic-bezier(0.19, 1, 0.22, 1)";
             welcome.style.opacity = "0";
             welcome.style.transform = "scale(0.96) translateY(-20px)";
-            welcome.style.pointerEvents = "none";
-
             setTimeout(() => {
                 welcome.style.display = "none";
                 selection.classList.remove('hidden');
@@ -248,19 +247,15 @@
         function openModal(type) {
             const modal = document.getElementById('disclaimerModal');
             const text = document.getElementById('modalText');
-            const title = document.getElementById('modalTitle');
             const btn = document.getElementById('continueBtn');
 
             if(type === 'admin') {
-                title.innerText = "ADMIN SECURITY ALERT";
                 text.innerText = "This is the portal especially designed for admins/owners of Patel Traders. Please do not login if you are a customer. If you login, that will be considered as an illegal practice and found to be guilty. Please login to the Customer Gateway if you are a customer or continue anyway.";
                 targetURL = "https://sheelu955.github.io/Admin-Gateway/";
             } else if(type === 'cms') {
-                title.innerText = "CMS PORTAL DISCLAIMER";
                 text.innerText = "This is the portal especially designed to handle the customer complaints and the request approval from the admin. If you are a customer please login to customer CMS portal only. If you login to admin portal that will be considered as illegal practice and you will be filed a case.";
                 targetURL = "https://sheelu955.github.io/CMS-COMPLAINT-MANAGEMENT-SYSTEM/";
             } else {
-                title.innerText = "CUSTOMER DISCLAIMER";
                 text.innerText = "This is the portal especially designed for the customers of Patel Traders. It is only valid for customers. Please login if you are an admin.";
                 targetURL = "https://sheelu955.github.io/Customer-Gateway/";
             }
