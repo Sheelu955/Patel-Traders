@@ -51,19 +51,19 @@
         .reveal { opacity: 0; transform: translateY(20px); animation: revealUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
         @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* 💎 Elite Buttons (2x2 Grid) */
+        /* 💎 Elite Buttons (2x3 Grid Adjusted) */
         .vault-btn {
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 153, 51, 0.15);
             border-radius: 30px;
-            padding: 24px;
+            padding: 20px;
             transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 165px;
+            min-height: 150px;
             cursor: pointer;
             position: relative;
             z-index: 10;
@@ -93,7 +93,6 @@
             z-index: 20;
         }
 
-        /* 🚨 Disclaimer Modal (Security Gate) */
         #disclaimerModal {
             position: fixed;
             inset: 0;
@@ -116,6 +115,8 @@
             border: 2px solid var(--saffron-main);
             box-shadow: 0 30px 60px rgba(0,0,0,0.3);
             animation: modalIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
         @keyframes modalIn {
@@ -131,6 +132,21 @@
 
         .icon-box { transition: 0.4s ease; pointer-events: none; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        
+        /* 🚀 Upcoming Badge */
+        .upcoming-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff9933;
+            color: white;
+            font-size: 8px;
+            padding: 4px 8px;
+            border-radius: 50px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
@@ -170,23 +186,17 @@
         </div>
     </div>
 
-    <div id="selectionScreen" class="hidden w-full max-w-[550px] px-6 text-center relative z-10">
+    <div id="selectionScreen" class="hidden w-full max-w-[800px] px-6 text-center relative z-10 overflow-y-auto max-h-screen py-10">
         <div id="selHeader" class="mb-12 opacity-0">
             <h3 class="text-3xl font-black text-[#1a1a1a] italic uppercase tracking-tight">Main Dashboard</h3>
             <div class="h-[3px] w-12 bg-orange-500 mx-auto mt-4 rounded-full"></div>
         </div>
 
-        <div class="grid grid-cols-2 gap-5">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
             <div onclick="openModal('admin')" class="vault-btn anim-btn">
                 <img src="https://i.ibb.co/JwnkKFyV/business-user-shield-78370-7029.webp" class="w-16 h-16 mb-4 icon-box">
                 <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">Admin Vault</h3>
                 <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Management</p>
-            </div>
-
-            <div onclick="openModal('cms')" class="vault-btn anim-btn" style="border-color: rgba(255, 153, 51, 0.4); background: rgba(255, 153, 51, 0.05);">
-                <div class="text-4xl mb-4 icon-box">📢</div>
-                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">CMS Portal</h3>
-                <p class="text-orange-600 font-black text-[7px] mt-1 italic uppercase tracking-[1px]">Complaints Help</p>
             </div>
 
             <div onclick="openModal('customer')" class="vault-btn anim-btn">
@@ -195,11 +205,30 @@
                 <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Dashboard</p>
             </div>
 
+            <div onclick="openModal('cms')" class="vault-btn anim-btn">
+                <div class="text-4xl mb-4 icon-box">📢</div>
+                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">CMS Portal</h3>
+                <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Complaints Help</p>
+            </div>
+
+            <div onclick="openModal('upcoming')" class="vault-btn anim-btn" style="border-color: rgba(255, 153, 51, 0.4); background: rgba(255, 153, 51, 0.05);">
+                <span class="upcoming-tag">Upcoming</span>
+                <div class="text-4xl mb-4 icon-box">🛍️</div>
+                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">Online Store</h3>
+                <p class="text-orange-600 font-black text-[7px] mt-1 italic uppercase tracking-[1px]">Shop Products</p>
+            </div>
+
             <a href="https://sheelu955.github.io/About-Patel-Traders-/" class="vault-btn anim-btn">
                 <div class="text-4xl mb-4 icon-box">🏢</div>
                 <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">About Us</h3>
                 <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Contact Info</p>
             </a>
+
+            <div onclick="openModal('policies')" class="vault-btn anim-btn">
+                <div class="text-4xl mb-4 icon-box">⚖️</div>
+                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">Policy Hub</h3>
+                <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Legal Terms</p>
+            </div>
         </div>
 
         <div id="footer" class="mt-16 opacity-0">
@@ -214,9 +243,9 @@
         <div class="modal-content">
             <div id="modalIcon" class="text-4xl mb-4">⚠️</div>
             <h2 id="modalTitle" class="text-xl font-black text-orange-700 uppercase tracking-widest mb-1">DISCLAIMER</h2>
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[3px] mb-6">Read And Understand</p>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-[3px] mb-6">Information Hub</p>
             
-            <p id="modalText" class="text-sm text-gray-600 leading-relaxed font-bold mb-8"></p>
+            <div id="modalText" class="text-sm text-gray-600 leading-relaxed font-bold mb-8 text-left space-y-4"></div>
             <div class="flex flex-col gap-3">
                 <button id="continueBtn" class="btn-modal-continue">Continue Anyway</button>
                 <button onclick="closeModal()" class="btn-modal-back">Back to Master Portal</button>
@@ -246,18 +275,39 @@
 
         function openModal(type) {
             const modal = document.getElementById('disclaimerModal');
-            const text = document.getElementById('modalText');
+            const content = document.getElementById('modalText');
             const btn = document.getElementById('continueBtn');
+            const icon = document.getElementById('modalIcon');
+            const title = document.getElementById('modalTitle');
+
+            btn.style.display = "block";
+            icon.innerText = "⚠️";
+            title.innerText = "DISCLAIMER";
 
             if(type === 'admin') {
-                text.innerText = "This is the portal especially designed for admins/owners of Patel Traders. Please do not login if you are a customer. If you login, that will be considered as an illegal practice and found to be guilty. Please login to the Customer Gateway if you are a customer or continue anyway.";
+                content.innerHTML = "This is the portal especially designed for admins/owners of Patel Traders. Please do not login if you are a customer. If you login, that will be considered as an illegal practice and found to be guilty. Please login to the Customer Gateway if you are a customer or continue anyway.";
                 targetURL = "https://sheelu955.github.io/Admin-Gateway/";
             } else if(type === 'cms') {
-                text.innerText = "This is the portal especially designed to handle the customer complaints and the request approval from the admin. If you are a customer please login to customer CMS portal only. If you login to admin portal that will be considered as illegal practice and you will be filed a case.";
+                content.innerHTML = "This is the portal especially designed to handle the customer complaints and the request approval from the admin. If you are a customer please login to customer CMS portal only. If you login to admin portal that will be considered as illegal practice and you will be filed a case.";
                 targetURL = "https://sheelu955.github.io/CMS-COMPLAINT-MANAGEMENT-SYSTEM/";
-            } else {
-                text.innerText = "This is the portal especially designed for the customers of Patel Traders. It is only valid for customers. Please login if you are an admin.";
+            } else if(type === 'customer') {
+                content.innerHTML = "This is the portal especially designed for the customers of Patel Traders. It is only valid for customers. Please login if you are an admin.";
                 targetURL = "https://sheelu955.github.io/Customer-Gateway/";
+            } else if(type === 'upcoming') {
+                title.innerText = "UPCOMING STORE";
+                icon.innerText = "🚀";
+                content.innerHTML = "Our <b>Online Store & Online Portal</b> is currently under construction. We are working hard to bring you a premium shopping experience. Stay tuned!";
+                btn.style.display = "none";
+            } else if(type === 'policies') {
+                title.innerText = "LEGAL HUB";
+                icon.innerText = "⚖️";
+                btn.style.display = "none";
+                content.innerHTML = `
+                    <div class='space-y-4 text-xs'>
+                        <p><b>Terms & Conditions:</b> By using our portal, you agree to follow the rules set by Patel Traders. No illegal access is allowed.</p>
+                        <p><b>Refund Policy:</b> Refunds are processed within 7-10 working days only for valid transaction errors. Physical goods follow shop rules.</p>
+                        <p><b>Payment Policy:</b> All payments are secured via unified gateways. Do not share your OTP or password with anyone.</p>
+                    </div>`;
             }
             
             btn.onclick = () => window.location.href = targetURL;
