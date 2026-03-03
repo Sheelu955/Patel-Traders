@@ -13,13 +13,11 @@
             --saffron-soft: #fff9f2;
             --saffron-main: #ff9933;
             --saffron-deep: #e67e22;
-            --text-main: #1a1a1a;
         }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: radial-gradient(circle at top right, #ffffff, var(--saffron-soft));
-            color: var(--text-main);
             margin: 0;
             min-height: 100vh;
             overflow: hidden;
@@ -47,11 +45,7 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        /* ✨ Reveal Animation */
-        .reveal { opacity: 0; transform: translateY(20px); animation: revealUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards; }
-        @keyframes revealUp { to { opacity: 1; transform: translateY(0); } }
-
-        /* 💎 Elite Buttons (2x2 Grid) */
+        /* 💎 Vault Buttons Style */
         .vault-btn {
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(20px);
@@ -66,7 +60,6 @@
             min-height: 165px;
             cursor: pointer;
             position: relative;
-            z-index: 10;
         }
 
         .vault-btn:hover {
@@ -76,24 +69,58 @@
             box-shadow: 0 25px 50px rgba(255, 153, 51, 0.15);
         }
 
-        /* 🟠 Start Button */
-        .btn-start {
-            background: linear-gradient(135deg, var(--saffron-main), var(--saffron-deep));
-            color: #ffffff;
-            font-weight: 700;
-            padding: 22px 70px;
-            border-radius: 100px;
+        .upcoming-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff9933;
+            color: white;
+            font-size: 8px;
+            padding: 4px 8px;
+            border-radius: 50px;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 10px 40px rgba(255, 153, 51, 0.3);
-            position: relative;
-            z-index: 20;
         }
 
-        /* 🚨 Disclaimer Modal (Security Gate) */
+        /* 🤖 Floating Chatbot Button */
+        .chat-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #ff9933, #e67e22);
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 15px 35px rgba(255, 153, 51, 0.4);
+            cursor: pointer;
+            z-index: 1000;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 4px solid white;
+        }
+
+        .chat-fab:hover { transform: scale(1.1) rotate(5deg); }
+
+        /* 📱 Chat Popup Window */
+        .chat-popup {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            width: 380px;
+            height: 600px;
+            max-height: 80vh;
+            background: white;
+            border-radius: 35px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            z-index: 999;
+            overflow: hidden;
+            display: none;
+            border: 2px solid #ff9933;
+        }
+
         #disclaimerModal {
             position: fixed;
             inset: 0;
@@ -102,7 +129,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 100;
+            z-index: 10000;
             padding: 20px;
         }
 
@@ -114,56 +141,8 @@
             padding: 40px;
             text-align: center;
             border: 2px solid var(--saffron-main);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
-            animation: modalIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
 
-        @keyframes modalIn {
-            from { opacity: 0; transform: scale(0.8) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        /* 🔘 Custom Checkbox Styling */
-        .consent-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 10px;
-            background: #fef5e7;
-            border-radius: 12px;
-            cursor: pointer;
-        }
-        .consent-container input { width: 16px; height: 16px; accent-color: var(--saffron-main); cursor: pointer; }
-        .consent-text { font-size: 11px; font-weight: 800; color: #cc7a00; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .btn-modal-back { border: 2px solid #ddd; color: #666; padding: 12px 20px; border-radius: 50px; font-weight: 700; font-size: 11px; text-transform: uppercase; transition: 0.3s; }
-        .btn-modal-back:hover { background: #f5f5f5; color: #1a1a1a; }
-
-        .btn-modal-continue { background: var(--saffron-main); color: white; padding: 12px 20px; border-radius: 50px; font-weight: 700; font-size: 11px; text-transform: uppercase; transition: 0.3s; box-shadow: 0 5px 15px rgba(255, 153, 51, 0.3); }
-        .btn-modal-continue:disabled { background: #e0e0e0; color: #999; box-shadow: none; cursor: not-allowed; }
-        .btn-modal-continue:not(:disabled):hover { background: var(--saffron-deep); transform: scale(1.05); }
-
-        .icon-box { transition: 0.4s ease; pointer-events: none; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
-        /* 🚀 Upcoming Badge */
-        .upcoming-tag {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: #ff9933;
-            color: white;
-            font-size: 8px;
-            padding: 4px 8px;
-            border-radius: 50px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-        
-        /* Keep original scroll class addition */
         .scroll-active { overflow-y: auto !important; }
     </style>
 </head>
@@ -181,189 +160,138 @@
     </svg>
 
     <div id="welcomeScreen" class="text-center px-6 relative z-10">
-        <div class="mb-10 relative inline-block">
-            <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-32 h-32 mx-auto rounded-[40px] shadow-2xl relative z-10" style="animation: float 6s ease-in-out infinite;">
-            <div class="absolute inset-0 bg-orange-400/30 blur-[60px] rounded-full pointer-events-none"></div>
+        <div class="mb-10">
+            <img src="https://i.ibb.co/C30Ybjck/PT-20250224-170650-0000.png" class="w-32 h-32 mx-auto rounded-[40px] shadow-2xl">
         </div>
-        
-        <h1 class="text-5xl md:text-8xl font-black text-[#1a1a1a] italic uppercase leading-[1] mb-6 tracking-tighter">
-            <div class="reveal"><span>Welcome To</span></div>
-            <div class="reveal text-orange-500"><span style="animation-delay: 0.2s;">Patel Traders</span></div>
+        <h1 class="text-6xl md:text-8xl font-black italic uppercase leading-[1] mb-6 tracking-tighter">
+            Welcome To <span class="text-orange-500">Patel Traders</span>
         </h1>
-
-        <p class="text-[11px] md:text-sm font-bold text-orange-700/80 uppercase tracking-[4px] mb-14 reveal" style="animation-delay: 0.3s;">
-            Unified Gateway For All Your Needs
-        </p>
-
-        <button onclick="showSelection(true)" class="btn-start reveal" style="animation-delay: 0.5s;">Get Started →</button>
-        
-        <div class="mt-20 reveal flex items-center justify-center gap-3 opacity-60" style="animation-delay: 0.7s;">
-            <div class="h-[1px] w-8 bg-orange-400"></div>
-            <span class="text-[10px] font-extrabold tracking-[5px] uppercase">🇮🇳 Made In India Products</span>
-            <div class="h-[1px] w-8 bg-orange-400"></div>
-        </div>
+        <button onclick="startPortal()" class="bg-orange-500 text-white font-bold py-5 px-12 rounded-full text-xl shadow-xl uppercase tracking-widest hover:bg-orange-600 transition-all">Get Started →</button>
     </div>
 
-    <div id="selectionScreen" class="hidden w-full max-w-[550px] px-6 text-center relative z-10">
-        <div id="selHeader" class="mb-12 opacity-0">
-            <h3 class="text-3xl font-black text-[#1a1a1a] italic uppercase tracking-tight">Main Dashboard</h3>
+    <div id="selectionScreen" class="hidden w-full max-w-[600px] px-6 text-center relative z-10 py-10">
+        <div class="mb-10">
+            <h3 class="text-3xl font-black italic uppercase tracking-tight">Main Dashboard</h3>
             <div class="h-[3px] w-12 bg-orange-500 mx-auto mt-4 rounded-full"></div>
         </div>
 
         <div class="grid grid-cols-2 gap-5">
-            <div onclick="openModal('admin')" class="vault-btn anim-btn">
-                <img src="https://i.ibb.co/JwnkKFyV/business-user-shield-78370-7029.webp" class="w-16 h-16 mb-4 icon-box">
-                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">Admin Vault</h3>
-                <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Management</p>
+            <div onclick="openModal('admin')" class="vault-btn">
+                <img src="https://i.ibb.co/JwnkKFyV/business-user-shield-78370-7029.webp" class="w-14 h-14 mb-4">
+                <h3 class="text-[12px] font-extrabold tracking-widest uppercase">Admin Vault</h3>
+            </div>
+            
+            <div onclick="openModal('cms')" class="vault-btn">
+                <div class="text-4xl mb-4">📢</div>
+                <h3 class="text-[12px] font-extrabold tracking-widest uppercase">CMS Portal</h3>
             </div>
 
-            <div onclick="openModal('cms')" class="vault-btn anim-btn">
-                <div class="text-4xl mb-4 icon-box">📢</div>
-                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">CMS Portal</h3>
-                <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Complaints Help</p>
+            <div onclick="openModal('customer')" class="vault-btn">
+                <div class="text-4xl mb-4">👤</div>
+                <h3 class="text-[12px] font-extrabold tracking-widest uppercase">User Vault</h3>
             </div>
 
-            <div onclick="openModal('customer')" class="vault-btn anim-btn">
-                <div class="text-4xl mb-4 icon-box">👤</div>
-                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">User Vault</h3>
-                <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Dashboard</p>
-            </div>
-
-            <a href="https://sheelu955.github.io/About-Patel-Traders-/" class="vault-btn anim-btn">
-                <div class="text-4xl mb-4 icon-box">🏢</div>
-                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">About Us</h3>
-                <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Contact Info</p>
+            <a href="https://sheelu955.github.io/About-Patel-Traders-/" class="vault-btn">
+                <div class="text-4xl mb-4">🏢</div>
+                <h3 class="text-[12px] font-extrabold tracking-widest uppercase">About Us</h3>
             </a>
 
-            <div onclick="openModal('upcoming')" class="vault-btn anim-btn" style="border-color: rgba(255, 153, 51, 0.4); background: rgba(255, 153, 51, 0.05);">
+            <div onclick="openModal('upcoming')" class="vault-btn border-orange-200 bg-orange-50/30">
                 <span class="upcoming-tag">Upcoming</span>
-                <div class="text-4xl mb-4 icon-box">🛍️</div>
-                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">Online Store</h3>
-                <p class="text-orange-600 font-black text-[7px] mt-1 italic uppercase tracking-[1px]">Shop Products</p>
+                <div class="text-4xl mb-4">🛍️</div>
+                <h3 class="text-[12px] font-extrabold tracking-widest uppercase">Online Store</h3>
             </div>
 
-            <div onclick="openModal('policies')" class="vault-btn anim-btn">
-                <div class="text-4xl mb-4 icon-box">⚖️</div>
-                <h3 class="text-[#1a1a1a] text-[12px] font-extrabold tracking-widest uppercase">Policy Hub</h3>
-                <p class="text-orange-900/40 text-[8px] font-bold mt-1 uppercase">Legal Terms</p>
+            <div onclick="openModal('policies')" class="vault-btn">
+                <div class="text-4xl mb-4">⚖️</div>
+                <h3 class="text-[12px] font-extrabold tracking-widest uppercase">Policy Hub</h3>
             </div>
         </div>
 
-        <div id="footer" class="mt-16 opacity-0">
-            <div class="bg-orange-50/50 border-y border-orange-100 py-6 px-4 rounded-xl">
-                <span class="text-[14px] font-black text-orange-700 tracking-[3px] uppercase">Made In India Products</span>
-                <p class="text-[11px] text-gray-500 font-bold uppercase tracking-[2px]">"एक बहुत अच्छा भारतीय प्रोडक्ट"</p>
-            </div>
+        <footer class="mt-16 text-center opacity-60">
+            <p class="text-[10px] font-black text-orange-700 tracking-[3px] uppercase">Official AI Developed by Patel Traders</p>
+            <p class="text-[9px] font-bold uppercase tracking-[2px] mt-2">Copyright 2026 | तालग्राम, गांधीनगर</p>
+        </footer>
+    </div>
+
+    <div id="chatButton" class="chat-fab hidden" onclick="toggleChat()">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    </div>
+
+    <div id="chatWindow" class="chat-popup">
+        <div style="background: #ff9933; padding: 15px; color: white; display: flex; justify-content: space-between;">
+            <span class="font-black text-xs uppercase tracking-widest">PT GOMINI AI</span>
+            <button onclick="toggleChat()" class="font-bold">×</button>
         </div>
+        <iframe src="https://sheelu955.github.io/AI/" style="width: 100%; height: calc(100% - 50px); border: none;"></iframe>
     </div>
 
     <div id="disclaimerModal">
         <div class="modal-content">
-            <div id="modalIcon" class="text-4xl mb-4">⚠️</div>
-            <h2 id="modalTitle" class="text-xl font-black text-orange-700 uppercase tracking-widest mb-1">DISCLAIMER</h2>
-            <p id="modalSubtitle" class="text-[10px] font-bold text-gray-400 uppercase tracking-[3px] mb-6">Read And Understand</p>
-            
-            <p id="modalText" class="text-sm text-gray-600 leading-relaxed font-bold mb-8"></p>
-            
-            <label class="consent-container" id="consentBoxSection">
-                <input type="checkbox" id="consentCheckbox" onchange="toggleContinueBtn()">
-                <span class="consent-text">I understand and agree to the above terms</span>
-            </label>
-
+            <h2 id="mTitle" class="text-xl font-black text-orange-700 uppercase tracking-widest mb-4">DISCLAIMER</h2>
+            <p id="mText" class="text-sm text-gray-600 font-bold mb-8"></p>
             <div class="flex flex-col gap-3">
-                <button id="continueBtn" class="btn-modal-continue" disabled>Continue Anyway</button>
-                <button onclick="closeModal()" class="btn-modal-back">Back to Master Portal</button>
+                <button id="mContinue" class="bg-orange-500 text-white py-3 rounded-full font-black text-xs uppercase">Continue</button>
+                <button onclick="closeModal()" class="border-2 py-3 rounded-full font-black text-xs uppercase text-gray-400">Back</button>
             </div>
         </div>
     </div>
 
     <script>
-        let targetURL = "";
-
-        window.onload = function() {
-            if(localStorage.getItem('pt_started') === 'true') {
-                document.getElementById('welcomeScreen').style.display = "none";
-                document.body.classList.add('scroll-active');
-                document.getElementById('selectionScreen').classList.remove('hidden');
-                document.getElementById('selHeader').style.opacity = "1";
-                document.getElementById('footer').style.opacity = "1";
-                document.querySelectorAll('.anim-btn').forEach(btn => btn.style.opacity = "1");
-            }
-        };
-
-        function showSelection(isManual) {
-            if(isManual) localStorage.setItem('pt_started', 'true');
-            const welcome = document.getElementById('welcomeScreen');
-            const selection = document.getElementById('selectionScreen');
-            welcome.style.transition = "all 0.8s cubic-bezier(0.19, 1, 0.22, 1)";
-            welcome.style.opacity = "0";
-            welcome.style.transform = "scale(0.96) translateY(-20px)";
-            setTimeout(() => {
-                welcome.style.display = "none";
-                document.body.classList.add('scroll-active');
-                selection.classList.remove('hidden');
-                document.getElementById('selHeader').style.animation = "revealUp 1s forwards";
-                document.getElementById('footer').style.animation = "revealUp 1s 0.8s forwards";
-                document.querySelectorAll('.anim-btn').forEach((btn, index) => {
-                    btn.style.animation = `revealUp 0.8s forwards ${0.2 + (index * 0.1)}s`;
-                });
-            }, 600);
+        function startPortal() {
+            localStorage.setItem('pt_started', 'true'); // Save state to Cache
+            document.getElementById('welcomeScreen').style.display = "none";
+            document.getElementById('selectionScreen').classList.remove('hidden');
+            document.getElementById('chatButton').classList.remove('hidden');
+            document.body.classList.add('scroll-active');
         }
 
-        function toggleContinueBtn() {
-            const checkbox = document.getElementById('consentCheckbox');
-            const btn = document.getElementById('continueBtn');
-            btn.disabled = !checkbox.checked;
+        function toggleChat() {
+            const chat = document.getElementById('chatWindow');
+            chat.style.display = (chat.style.display === 'block') ? 'none' : 'block';
         }
 
         function openModal(type) {
             const modal = document.getElementById('disclaimerModal');
-            const text = document.getElementById('modalText');
-            const btn = document.getElementById('continueBtn');
-            const icon = document.getElementById('modalIcon');
-            const title = document.getElementById('modalTitle');
-            const subtitle = document.getElementById('modalSubtitle');
-            const checkboxSection = document.getElementById('consentBoxSection');
-            const checkbox = document.getElementById('consentCheckbox');
+            const text = document.getElementById('mText');
+            const btn = document.getElementById('mContinue');
+            const title = document.getElementById('mTitle');
+            let target = "";
 
-            checkbox.checked = false;
-            btn.disabled = true;
             btn.style.display = "block";
-            checkboxSection.style.display = "flex";
-            icon.innerText = "⚠️";
             title.innerText = "DISCLAIMER";
-            subtitle.innerText = "Read And Understand";
 
             if(type === 'admin') {
-                text.innerHTML = "This is the portal especially designed for admins/owners of Patel Traders. Please do not login if you are a customer. If you login, that will be considered as an illegal practice and found to be guilty. Please login to the Customer Gateway if you are a customer or continue anyway.";
-                targetURL = "https://sheelu955.github.io/Admin-Gateway/";
+                text.innerText = "Only for Patel Traders Admins. Unauthorized login is illegal.";
+                target = "https://sheelu955.github.io/Admin-Gateway/";
             } else if(type === 'cms') {
-                text.innerHTML = "This is the portal especially designed to handle the customer complaints and the request approval from the admin. If you are a customer please login to customer CMS portal only. If you login to admin portal that will be considered as illegal practice and you will be filed a case.";
-                targetURL = "https://sheelu955.github.io/CMS-COMPLAINT-MANAGEMENT-SYSTEM/";
+                text.innerText = "CMS Handling. Unauthorized access is subject to legal action.";
+                target = "https://sheelu955.github.io/CMS-COMPLAINT-MANAGEMENT-SYSTEM/";
             } else if(type === 'customer') {
-                text.innerHTML = "This portal is specifically designed to manage and verify bills generated from your offline store purchases. Any unauthorized or illegal use of this portal is strictly prohibited and subject to legal prosecution.";
-                targetURL = "https://sheelu955.github.io/Customer-Gateway/";
+                text.innerText = "Login to User Vault to manage your bills and orders.";
+                target = "https://sheelu955.github.io/Customer-Gateway/";
             } else if(type === 'upcoming') {
-                title.innerText = "UPCOMING STORE";
-                icon.innerText = "🚀";
-                subtitle.innerText = "Information Hub";
-                text.innerHTML = "Our Online Store & Portal is currently under construction. Stay tuned!";
+                title.innerText = "COMING SOON";
+                text.innerText = "The Patel Traders Online Store is currently under construction. Stay tuned for 2026 launch!";
                 btn.style.display = "none";
-                checkboxSection.style.display = "none";
             } else if(type === 'policies') {
-                title.innerText = "LEGAL HUB";
-                icon.innerText = "⚖️";
-                subtitle.innerText = "Information Hub";
+                title.innerText = "POLICY HUB";
+                text.innerHTML = "Refunds: 7-10 Days.<br>No Warranty on Products.<br>No Home Delivery Currently.";
                 btn.style.display = "none";
-                checkboxSection.style.display = "none";
-                text.innerHTML = "Terms & Conditions: By using this portal, you agree to follow the rules set by Patel Traders.<br><br>Refund Policy: Valid for transaction errors within 7-10 working days.<br><br>Payment Policy: All payments are secured via unified gateways.";
             }
             
-            btn.onclick = () => window.location.href = targetURL;
+            btn.onclick = () => window.location.href = target;
             modal.style.display = 'flex';
         }
 
         function closeModal() { document.getElementById('disclaimerModal').style.display = 'none'; }
+
+        // Load Cache on Window Load
+        window.onload = function() {
+            if(localStorage.getItem('pt_started') === 'true') {
+                startPortal();
+            }
+        };
     </script>
 </body>
 </html>
